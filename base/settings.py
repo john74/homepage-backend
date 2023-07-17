@@ -121,3 +121,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Project specific
+PROJECT_APPS = [
+    'users.apps.UsersConfig',
+]
+
+THIRD_PARTY_APPS = []
+
+INSTALLED_APPS += PROJECT_APPS + THIRD_PARTY_APPS
