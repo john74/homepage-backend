@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from decouple import config
 from pathlib import Path
 
@@ -112,10 +114,35 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Project specific
+AUTH_USER_MODEL = 'users.User'
+
 PROJECT_APPS = [
     'users.apps.UsersConfig',
 ]
 
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = [
+    'rest_framework',
+]
 
 INSTALLED_APPS += PROJECT_APPS + THIRD_PARTY_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+}
+
+ACCESS_TOKEN_SECONDS_LIFETIME = config("ACCESS_TOKEN_SECONDS_LIFETIME")
+REFRESH_TOKEN_DAYS_LIFETIME = config("REFRESH_TOKEN_DAYS_LIFETIME")
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=int(ACCESS_TOKEN_SECONDS_LIFETIME)),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(REFRESH_TOKEN_DAYS_LIFETIME)),
+    "SIGNING_KEY": config('SIGNING_KEY'),
+    "ALGORITHM": "HS256",
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "AUTH_HEADER_TYPES": ("JWT",),
+}
