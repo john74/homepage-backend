@@ -14,7 +14,7 @@ class SignInAPIViewTest(APITestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
         self.view = SignInAPIView.as_view()
-        self.url = reverse('users:signin')
+        self.url = reverse('users:sign_in')
         self.user = User.objects.create_user(email="user@app.com", password="user_1234")
 
     def test_signin_success(self):

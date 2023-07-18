@@ -14,7 +14,7 @@ class SignUpAPIViewTest(APITestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
         self.view = SignUpAPIView.as_view()
-        self.url = reverse('users:signup')
+        self.url = reverse('users:sign_up')
 
     def test_signup_success(self):
         signup_data = {

@@ -8,8 +8,8 @@ from . import views
 app_name = 'users'
 
 urlpatterns = [
-    path('signup/', views.SignUpAPIView.as_view(), name="signup"),
-    path('signin/', views.SignInAPIView.as_view(), name="signin"),
+    path('sign-up/', views.SignUpAPIView.as_view(), name="sign_up"),
+    path('sign-in/', views.SignInAPIView.as_view(), name="sign_in"),
     path('sign-out/', views.SignOutAPIView.as_view(), name="sign_out"),
     path('refresh-token/', TokenRefreshView.as_view(), name="refresh_token"),
 ]
