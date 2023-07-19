@@ -1,0 +1,1 @@
+from .bookmark_category_bulk_create_view import BookmarkCategoryBulkCreateAPIView
