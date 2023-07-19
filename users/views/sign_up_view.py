@@ -6,6 +6,10 @@ from users.serializers import UserSerializer
 
 
 class SignUpAPIView(generics.GenericAPIView):
+    """
+    Creates and saves a new user to the database if the request data
+    is valid.
+    """
     permission_classes = [AllowAny,]
 
     def post(self, request):

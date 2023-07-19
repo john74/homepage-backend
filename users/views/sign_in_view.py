@@ -9,6 +9,10 @@ from users.utils import create_jwt_pair_for_user
 
 
 class SignInAPIView(APIView):
+    """
+    Authenticates the user and returns an access token and
+    a refresh token, set as HTTP-only, upon successful authentication.
+    """
     permission_classes = [AllowAny]
 
     def post(self, request):

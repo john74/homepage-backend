@@ -4,7 +4,10 @@ from rest_framework.response import Response
 
 
 class SignOutAPIView(APIView):
-
+    """
+    Logs out the currently authenticated user by deleting the 'refreshToken'
+    from the response's HTTP cookies.
+    """
     def post(self, request):
         response = Response()
         response.delete_cookie(key='refreshToken')
