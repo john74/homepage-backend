@@ -117,6 +117,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 PROJECT_APPS = [
+    'bookmarks.apps.BookmarksConfig',
     'users.apps.UsersConfig',
 ]
 
