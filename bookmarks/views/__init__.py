@@ -6,3 +6,4 @@ from .bookmark_category_detail_view import BookmarkCategoryDetailAPIView
 from .bookmark_bulk_create_view import BookmarkBulkCreateAPIView
 from .bookmark_list_view import BookmarkListAPIView
 from .bookmark_detail_view import BookmarkDetailAPIView
+from .bookmark_bulk_delete_view import BookmarkBulkDeleteAPIView
