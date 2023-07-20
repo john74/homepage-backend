@@ -16,5 +16,6 @@ urlpatterns = [
 
 #bookmark paths
 urlpatterns += [
+    path('', views.BookmarkListAPIView.as_view(), name="list_bookmarks"),
     path('bulk-create/', views.BookmarkBulkCreateAPIView.as_view(), name="bulk_create"),
 ]
