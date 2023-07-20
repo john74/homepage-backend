@@ -24,3 +24,13 @@ class BookmarkCategorySerializer(serializers.ModelSerializer):
             "created_at": category.created_at,
             "updated_at": category.updated_at
         }
+
+    def update(self, category, validated_data):
+        updated_category = super().update(category, validated_data)
+        return {
+            "id": updated_category.id,
+            "name": updated_category.name,
+            "color": updated_category.color,
+            "created_at": updated_category.created_at,
+            "updated_at": updated_category.updated_at
+        }
