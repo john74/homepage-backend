@@ -118,6 +118,7 @@ AUTH_USER_MODEL = 'users.User'
 
 PROJECT_APPS = [
     'bookmarks.apps.BookmarksConfig',
+    'settings.apps.SettingsConfig',
     'users.apps.UsersConfig',
 ]
 
