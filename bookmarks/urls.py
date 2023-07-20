@@ -26,4 +26,5 @@ urlpatterns += [
 #shortcut paths
 urlpatterns += [
     path('shortcuts/', views.ShortcutListAPIView.as_view(), name="list_shortcuts"),
+    path('bulk-delete-shortcuts/', views.ShortcutBulkDeleteAPIView.as_view(), name="bulk_delete_shortcuts"),
 ]
