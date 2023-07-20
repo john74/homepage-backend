@@ -4,7 +4,6 @@ from bookmarks.models import Bookmark
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Bookmark
         fields = [
@@ -29,13 +28,3 @@ class BookmarkSerializer(serializers.ModelSerializer):
             "created_at": bookmark.created_at,
             "updated_at": bookmark.updated_at
         }
-
-    # def update(self, category, validated_data):
-    #     updated_category = super().update(category, validated_data)
-    #     return {
-    #         "id": updated_category.id,
-    #         "name": updated_category.name,
-    #         "color": updated_category.color,
-    #         "created_at": updated_category.created_at,
-    #         "updated_at": updated_category.updated_at
-    #     }
