@@ -13,3 +13,8 @@ urlpatterns = [
     path('bulk-delete-categories/', views.BookmarkCategoryBulkDeleteAPIView.as_view(), name="bulk_delete_categories"),
     path('bulk-update-categories/', views.BookmarkCategoryBulkUpdateAPIView.as_view(), name="bulk_update_categories"),
 ]
+
+#bookmark paths
+urlpatterns += [
+    path('bulk-create/', views.BookmarkBulkCreateAPIView.as_view(), name="bulk_create"),
+]

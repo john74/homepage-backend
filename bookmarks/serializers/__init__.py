@@ -1,1 +1,2 @@
 from .bookmark_category_serialzer import BookmarkCategorySerializer
+from .bookmark_serialzer import BookmarkSerializer
