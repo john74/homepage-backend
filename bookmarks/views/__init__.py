@@ -8,3 +8,4 @@ from .bookmark_list_view import BookmarkListAPIView
 from .bookmark_detail_view import BookmarkDetailAPIView
 from .bookmark_bulk_delete_view import BookmarkBulkDeleteAPIView
 from .bookmark_bulk_update_view import BookmarkBulkUpdateAPIView
+from .shortcut_list_view import ShortcutListAPIView
