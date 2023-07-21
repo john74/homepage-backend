@@ -3,8 +3,8 @@ from django.contrib import admin
 
 class SettingAdmin(admin.ModelAdmin):
     fields = [
-        'country', 'city', 'latitude', 'longitude',
-        'open_weather_api_key', 'units'
+        'latitude', 'longitude', 'open_weather_api_key', 'units',
+        'country', 'city',
     ]
     readonly_fields = [
         'country', 'city',
