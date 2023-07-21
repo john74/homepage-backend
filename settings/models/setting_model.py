@@ -52,7 +52,8 @@ class Setting(models.Model):
         max_length=100,
         blank=True,
         null=True,
-        verbose_name="Automatically derived from latitude and longitude"
+        verbose_name="Timezone",
+        help_text="Automatically derived from latitude and longitude"
     )
 
     class Meta:
