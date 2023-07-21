@@ -48,6 +48,12 @@ class Setting(models.Model):
         null=True,
         verbose_name="Open weather API key"
     )
+    timezone = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Automatically derived from latitude and longitude"
+    )
 
     class Meta:
         verbose_name_plural = 'Settings'
