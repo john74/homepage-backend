@@ -11,17 +11,17 @@ class Setting(models.Model):
     )
     latitude = models.CharField(
         max_length=10,
-        blank=True,
-        null=True,
         verbose_name="Latitude",
         help_text="Latitude value in decimal degrees e.g. 39.362483"
     )
     longitude = models.CharField(
         max_length=10,
-        blank=True,
-        null=True,
         verbose_name="Longitude",
         help_text="Longitude value in decimal degrees e.g. 22.940186"
+    )
+    open_weather_api_key = models.CharField(
+        max_length=500,
+        verbose_name="Open weather API key"
     )
     country = models.CharField(
         max_length=100,
@@ -37,16 +37,10 @@ class Setting(models.Model):
         verbose_name="City",
         help_text="Automatically derived from latitude and longitude"
     )
-    units = models.BooleanField(
+    metric_units = models.BooleanField(
         default=True,
         verbose_name="Metric units",
         help_text="If set to false, imperial units will be used"
-    )
-    open_weather_api_key = models.CharField(
-        max_length=500,
-        blank=True,
-        null=True,
-        verbose_name="Open weather API key"
     )
     timezone = models.CharField(
         max_length=100,
@@ -61,3 +55,11 @@ class Setting(models.Model):
 
     def __str__(self):
         return 'Settings'
+
+    def save(self, *args, **kwargs):
+        setting = Setting.objects.first()
+        country = getattr(setting, 'country', None)
+
+        if country:
+            return
+        super().save(*args, **kwargs)
