@@ -5,4 +5,6 @@ from . import views
 
 app_name = 'settings'
 
-urlpatterns = []
+urlpatterns = [
+    path('create/', views.SettingCreateAPIView.as_view(), name="create"),
+]
