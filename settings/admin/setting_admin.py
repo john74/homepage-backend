@@ -3,7 +3,7 @@ from django.contrib import admin
 
 class SettingAdmin(admin.ModelAdmin):
     fields = [
-        'latitude', 'longitude', 'open_weather_api_key', 'units',
+        'latitude', 'longitude', 'open_weather_api_key', 'metric_units',
         'country', 'city', 'timezone',
     ]
     readonly_fields = [
@@ -11,5 +11,5 @@ class SettingAdmin(admin.ModelAdmin):
     ]
     list_display = [
         'country', 'city', 'latitude', 'longitude',
-        'timezone',
+        'metric_units', 'timezone',
     ]
