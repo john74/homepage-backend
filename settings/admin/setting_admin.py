@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from settings.models import Setting
 
 class SettingAdmin(admin.ModelAdmin):
     fields = [
@@ -13,3 +14,7 @@ class SettingAdmin(admin.ModelAdmin):
         'country', 'city', 'latitude', 'longitude',
         'metric_units', 'timezone',
     ]
+
+    def has_add_permission(self, request):
+        # Disallow adding a new instance if a setting already exists.
+        return not Setting.objects.exists()
