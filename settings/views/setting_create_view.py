@@ -13,8 +13,7 @@ class SettingCreateAPIView(APIView):
         if Setting.objects.exists():
             return Response(data={'errors':"Setting exists. Cannot add another one"}, status=status.HTTP_400_BAD_REQUEST)
 
-        setting = request.data
-        serializer = self.serializer_class(data=setting)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_200_OK)
