@@ -1,4 +1,4 @@
-import uuid
+import inspect, uuid
 
 from django.db import models
 
@@ -59,7 +59,11 @@ class Setting(models.Model):
     def save(self, *args, **kwargs):
         setting = Setting.objects.first()
         country = getattr(setting, 'country', None)
+        caller_function_name = inspect.currentframe().f_back.f_code.co_name.lower()
 
-        if country:
+        # Prevent recursion errors by avoiding additional calls to the save method
+        # from the populate_setting_fields signal and other methods.
+        # Only allow the update method to call save.
+        if country and caller_function_name != 'update':
             return
-        super().save(*args, **kwargs)
+        super(Setting, self).save(*args, **kwargs)
