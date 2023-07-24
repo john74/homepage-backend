@@ -7,4 +7,4 @@ def get_location_info(setting):
     appid = setting.open_weather_api_key
 
     url = f'https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&units={units}&appid={appid}'
-    return httpx.get(url).json()
+    return httpx.get(url)
