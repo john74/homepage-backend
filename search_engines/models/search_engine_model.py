@@ -31,6 +31,11 @@ class SearchEngine(models.Model):
         verbose_name="Name attribute",
         help_text="The value of the name attribute of the type=search element e.g. q"
     )
+    is_default = models.BooleanField(
+        default=False,
+        verbose_name="Is Default",
+        help_text="This search engine will be used as the default. Only one search engine can be set as the default"
+    )
 
     class Meta:
         verbose_name_plural = 'Search Engines'
