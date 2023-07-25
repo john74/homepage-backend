@@ -1,6 +1,7 @@
 import inspect, uuid
 
 from django.db import models
+from django.db.models import Case, When, Value, CharField
 
 
 class SearchEngine(models.Model):
@@ -39,7 +40,14 @@ class SearchEngine(models.Model):
 
     class Meta:
         verbose_name_plural = 'Search Engines'
-        unique_together = []
+        ordering = [
+            Case(
+                When(name='Google', then=Value('A')),
+                default=Value('B'),
+                output_field=CharField(),
+            ),
+            'name',
+        ]
 
     def __str__(self):
         return self.name
