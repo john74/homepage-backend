@@ -1,8 +1,23 @@
 import inspect, uuid
 
 from django.db import models
-from django.db.models import Case, When, Value, CharField
+from django.db.models import Case, When, Value, CharField, Q
 
+
+class SearchEngineManager(models.Manager):
+
+    def create(self, **kwargs):
+        name = kwargs.get('name', '')
+        url = kwargs.get('url', '')
+        lookup = Q(name__iexact=name) | Q(url__iexact=url)
+
+        if self.filter(lookup):
+            return
+
+        is_default = kwargs.get('is_default', False)
+        if is_default:
+            SearchEngine.objects.filter(is_default=True).update(is_default=False)
+        return super().create(**kwargs)
 
 class SearchEngine(models.Model):
     id = models.UUIDField(
@@ -42,12 +57,14 @@ class SearchEngine(models.Model):
         verbose_name_plural = 'Search Engines'
         ordering = [
             Case(
-                When(name='Google', then=Value('A')),
+                When(name__icontains='Google', then=Value('A')),
                 default=Value('B'),
                 output_field=CharField(),
             ),
             'name',
         ]
+
+    objects = SearchEngineManager()
 
     def __str__(self):
         return self.name
