@@ -5,4 +5,8 @@ from . import views
 
 app_name = 'search_engines'
 
-urlpatterns = []
+urlpatterns = [
+    path('', views.SearchEngineListAPIView.as_view(), name="list"),
+    path('bulk-create/', views.SearchEngineBulkCreateAPIView.as_view(), name="bulk_create"),
+    path('bulk-update/', views.SearchEngineBulkUpdateAPIView.as_view(), name="bulk_update"),
+]
