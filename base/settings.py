@@ -129,6 +129,16 @@ THIRD_PARTY_APPS = [
 
 INSTALLED_APPS += PROJECT_APPS + THIRD_PARTY_APPS
 
+THIRD_PARTY_MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
+
+MIDDLEWARE += THIRD_PARTY_MIDDLEWARE
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication',
