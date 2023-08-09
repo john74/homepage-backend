@@ -21,13 +21,23 @@ class SignInAPIView(APIView):
 
         # in case we don't delete the users but deactivate them
         if not user or not user.is_active:
-            return Response(data={"message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                data={
+                    "message": "Invalid credentials",
+                    "status": status.HTTP_401_UNAUTHORIZED
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
         tokens = create_jwt_pair_for_user(user)
         response = Response()
 
         response.set_cookie(key='refreshToken', value=tokens['refresh'], httponly=True)
-        response.data = {"message": "Signin Successful", "access_token": tokens['access']}
+        response.data = {
+            "message": "Sign in successful",
+            "status": status.HTTP_200_OK,
+            "access_token": tokens['access']
+        }
         response.status = status.HTTP_200_OK
 
         return response
