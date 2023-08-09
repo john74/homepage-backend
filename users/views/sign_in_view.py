@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth import authenticate
 
 from rest_framework import status
@@ -36,8 +38,11 @@ class SignInAPIView(APIView):
         response.data = {
             "message": "Sign in successful",
             "status": status.HTTP_200_OK,
+            "last_login": user.last_login,
             "access_token": tokens['access']
         }
         response.status = status.HTTP_200_OK
 
+        user.last_login = datetime.now()
+        user.save()
         return response
