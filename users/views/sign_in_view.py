@@ -35,11 +35,10 @@ class SignInAPIView(APIView):
         response = Response()
 
         response.set_cookie(key='refreshToken', value=tokens['refresh'], httponly=True)
+        response.set_cookie(key='accessToken', value=tokens['access'], httponly=True)
+
         response.data = {
-            "message": "Sign in successful",
-            "status": status.HTTP_200_OK,
-            "last_login": user.last_login,
-            "access_token": tokens['access']
+            "last_login": user.last_login
         }
         response.status = status.HTTP_200_OK
 
