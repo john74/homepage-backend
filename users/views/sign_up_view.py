@@ -30,7 +30,6 @@ class SignUpAPIView(generics.GenericAPIView):
         return Response(
             data={
                 "message": error,
-                "status": status.HTTP_400_BAD_REQUEST
             },
             status=status.HTTP_400_BAD_REQUEST
         )
