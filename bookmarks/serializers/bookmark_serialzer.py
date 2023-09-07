@@ -17,6 +17,12 @@ class BookmarkSerializer(serializers.ModelSerializer):
             'updated_at'
         ]
 
+    def to_representation(self, instance):
+        # Create a custom representation for the serialized data
+        bookmark = super().to_representation(instance)
+        bookmark_category = bookmark.pop('category')
+        return {str(bookmark_category): bookmark}
+
     def save(self, validated_data):
         bookmark = super().save(**validated_data)
         return {
