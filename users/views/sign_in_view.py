@@ -26,7 +26,6 @@ class SignInAPIView(APIView):
             return Response(
                 data={
                     "message": "Invalid credentials",
-                    "status": status.HTTP_401_UNAUTHORIZED
                 },
                 status=status.HTTP_401_UNAUTHORIZED
             )
@@ -38,7 +37,7 @@ class SignInAPIView(APIView):
         response.set_cookie(key='accessToken', value=tokens['access'], httponly=True)
 
         response.data = {
-            "last_login": user.last_login
+            "last_login": user.last_login,
         }
         response.status = status.HTTP_200_OK
 
