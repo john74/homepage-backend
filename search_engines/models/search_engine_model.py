@@ -1,4 +1,5 @@
 import inspect, uuid
+from datetime import datetime
 
 from django.db import models
 from django.db.models import Case, When, Value, CharField, Q
@@ -50,6 +51,16 @@ class SearchEngine(models.Model):
         verbose_name="Is Default",
         help_text="This search engine will be used as the default. Only one search engine can be set as the default"
     )
+    updated_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    def save(self, *args, **kwargs):
+        # Update the modification date if the object already exists.
+        if not self._state.adding:
+            self.updated_at = datetime.now()
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = 'Search Engines'
