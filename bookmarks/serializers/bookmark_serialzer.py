@@ -25,12 +25,4 @@ class BookmarkSerializer(serializers.ModelSerializer):
 
     def save(self, validated_data):
         bookmark = super().save(**validated_data)
-        return {
-            "id": bookmark.id,
-            "name": bookmark.name,
-            "url": bookmark.url,
-            "icon_url": bookmark.icon_url,
-            "is_shortcut": bookmark.is_shortcut,
-            "created_at": bookmark.created_at,
-            "updated_at": bookmark.updated_at
-        }
+        return self.to_representation(bookmark)
