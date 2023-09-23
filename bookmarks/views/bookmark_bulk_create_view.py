@@ -1,6 +1,9 @@
+from collections import defaultdict
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import ValidationError
 
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer
@@ -14,19 +17,22 @@ class BookmarkBulkCreateAPIView(APIView):
         created_bookmarks = []
         errors = []
 
-        for bookmark in bookmarks:
-            serializer = self.serializer_class(data=bookmark)
-            if serializer.is_valid():
+        for bookmark_data in bookmarks:
+            serializer = self.serializer_class(data=bookmark_data)
+            try:
+                serializer.is_valid(raise_exception=True)
                 created_bookmark = serializer.save(serializer.validated_data)
                 created_bookmarks.append(created_bookmark)
-            else:
-                for field, message in serializer.errors.items():
-                    errors.append({'message':f'{field} {message[0].lower()}', 'bookmark':bookmark})
+            except ValidationError as e:
+                errors.append({'message': str(e), 'bookmark': bookmark_data})
 
-        if not errors:
-            return Response(data=created_bookmarks, status=status.HTTP_200_OK)
+        if errors:
+            return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
-        if len(errors) < len(bookmarks):
-            return Response(data={'bookmarks':created_bookmarks, 'errors':errors}, status=status.HTTP_206_PARTIAL_CONTENT)
+        # Group the data by the 'category' field
+        grouped_data = defaultdict(list)
+        for item in created_bookmarks:
+            category = list(item.keys())[0]
+            grouped_data[category].append(item[category])
 
-        return Response(data={'errors':errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'bookmarks': grouped_data}, status=status.HTTP_201_CREATED)
