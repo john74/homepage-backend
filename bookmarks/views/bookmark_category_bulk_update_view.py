@@ -16,29 +16,36 @@ class BookmarkCategoryBulkUpdateAPIView(APIView):
         updated_categories = []
         errors = []
 
-        for category in categories:
-            if 'id' not in category or not category['id']:
-                errors.append(f"id not provided for {category}")
+        for category_data in categories:
+            if 'id' not in category_data or not category_data['id']:
+                errors.append(f"id not provided for {category_data}")
                 continue
 
             try:
-                category_obj = BookmarkCategory.objects.get(id=category['id'])
+                category_obj = BookmarkCategory.objects.get(id=category_data['id'])
             except (BookmarkCategory.DoesNotExist, ValidationError):
-                errors.append(f"{category['id']} is not a valid id")
+                errors.append(f"{category_data['id']} is not a valid id")
                 continue
 
-            serializer = self.serializer_class(data=category)
+            serializer = self.serializer_class(instance=category_obj, data=category_data)
             if serializer.is_valid():
-                updated_category = serializer.update(category_obj, serializer.validated_data)
-                updated_categories.append(updated_category)
+                serializer.save()
+                updated_categories.append(serializer.data)
             else:
-                for field, message in serializer.errors.items():
-                    errors.append(f'{field} {message[0].lower()}')
+                errors.extend(serializer.errors)
 
-        if not errors:
-            return Response(data={'categories':updated_categories}, status=status.HTTP_200_OK)
+        # Retrieve all categories
+        all_categories = BookmarkCategory.objects.all()
+        serialized_categories = self.serializer_class(all_categories, many=True).data
 
-        if len(errors) < len(categories):
-            return Response(data={'categories':updated_categories, 'errors':errors}, status=status.HTTP_206_PARTIAL_CONTENT)
+        response_data = {'categories': serialized_categories, 'errors': errors}
 
-        return Response(data={'errors':errors}, status=status.HTTP_400_BAD_REQUEST)
+        if errors:
+            status_code = status.HTTP_400_BAD_REQUEST
+        elif updated_categories:
+            status_code = status.HTTP_200_OK
+        else:
+            status_code = status.HTTP_204_NO_CONTENT
+
+        return Response(data=response_data, status=status_code)
+
