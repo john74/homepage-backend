@@ -5,24 +5,25 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bookmarks.models import BookmarkCategory
+from bookmarks.serializers import BookmarkCategorySerializer
 
 
 class BookmarkCategoryBulkDeleteAPIView(APIView):
+    serializer_class = BookmarkCategorySerializer
 
     def delete(self, request, *args, **kwargs):
         category_ids = request.data.get('ids', [])
-        if not category_ids:
-            return Response({'message': 'No IDs provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            categories = BookmarkCategory.objects.filter(id__in=category_ids)
-        except ValidationError as error:
-            return Response(data={"message":error}, status=status.HTTP_400_BAD_REQUEST)
+        # Fetch all categories
+        all_categories = BookmarkCategory.objects.all()
 
-        if not categories:
-            return Response({'message': 'No bookmark categories found'}, status=status.HTTP_400_BAD_REQUEST)
+        # Filter categories to be deleted
+        categories_to_delete = all_categories.filter(id__in=category_ids)
+        categories_to_delete.delete()
 
-        for category in categories:
-            category.delete()
+        # Exclude the deleted categories from the original queryset and serialize the remaining categories
+        all_categories = all_categories.exclude(id__in=categories_to_delete.values('id'))
+        serialized_categories = self.serializer_class(all_categories, many=True).data
+        response_data = {'categories': serialized_categories}
+        return Response(data=response_data, status=status.HTTP_200_OK)
 
-        return Response(data={"message":"bookmark categories deleted"}, status=status.HTTP_200_OK)
