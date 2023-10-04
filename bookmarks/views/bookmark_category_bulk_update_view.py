@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from bookmarks.models import BookmarkCategory
 from bookmarks.serializers import BookmarkCategorySerializer
+from bookmarks.utils import group_bookmark_categories
 
 
 class BookmarkCategoryBulkUpdateAPIView(APIView):
@@ -37,8 +38,8 @@ class BookmarkCategoryBulkUpdateAPIView(APIView):
         # Retrieve all categories
         all_categories = BookmarkCategory.objects.all()
         serialized_categories = self.serializer_class(all_categories, many=True).data
-
-        response_data = {'categories': serialized_categories, 'errors': errors}
+        grouped_categories = group_bookmark_categories(serialized_categories)
+        response_data = {'categories': grouped_categories, 'errors': errors}
 
         if errors:
             status_code = status.HTTP_400_BAD_REQUEST
