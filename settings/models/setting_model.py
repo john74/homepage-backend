@@ -49,6 +49,16 @@ class Setting(models.Model):
         verbose_name="Timezone",
         help_text="Automatically derived from latitude and longitude"
     )
+    bookmark_category_group_size = models.PositiveIntegerField(
+        default=6,
+        blank=True,
+        null=True,
+        verbose_name="Bookmark categories group size",
+        help_text="The number of categories to group together in the UI. "
+                  "For example, if you set this to 6 and there are 12 categories, "
+                  "they will be displayed as 2 groups of 6 categories each. "
+                  "Leave this field blank if you don't want any grouping."
+    )
 
     class Meta:
         verbose_name_plural = 'Settings'

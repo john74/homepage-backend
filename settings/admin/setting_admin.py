@@ -4,8 +4,8 @@ from settings.models import Setting
 
 class SettingAdmin(admin.ModelAdmin):
     fields = [
-        'latitude', 'longitude', 'open_weather_api_key', 'metric_units',
-        'country', 'city', 'timezone',
+        'latitude', 'longitude', 'open_weather_api_key', 'bookmark_category_group_size',
+        'metric_units', 'country', 'city', 'timezone',
     ]
     readonly_fields = [
         'country', 'city', 'timezone',
