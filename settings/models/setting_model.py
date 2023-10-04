@@ -10,16 +10,22 @@ class Setting(models.Model):
         editable=False
     )
     latitude = models.CharField(
+        blank=True,
+        null=True,
         max_length=10,
         verbose_name="Latitude",
         help_text="Latitude value in decimal degrees e.g. 39.362483"
     )
     longitude = models.CharField(
+        blank=True,
+        null=True,
         max_length=10,
         verbose_name="Longitude",
         help_text="Longitude value in decimal degrees e.g. 22.940186"
     )
     open_weather_api_key = models.CharField(
+        blank=True,
+        null=True,
         max_length=500,
         verbose_name="Open weather API key"
     )
@@ -57,7 +63,7 @@ class Setting(models.Model):
         help_text="The number of categories to group together in the UI. "
                   "For example, if you set this to 6 and there are 12 categories, "
                   "they will be displayed as 2 groups of 6 categories each. "
-                  "Leave this field blank if you don't want any grouping."
+                  "Set to zero or leave this field blank if you don't want any grouping."
     )
 
     class Meta:
