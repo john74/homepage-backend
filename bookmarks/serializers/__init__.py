@@ -1,4 +1,3 @@
 from .bookmark_category_serialzer import BookmarkCategorySerializer
 from .bookmark_serialzer import BookmarkSerializer
-from .bookmark_update_serialzer import BookmarkUpdateSerializer
 from .shortcut_serialzer import ShortcutSerializer
