@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.core.exceptions import ValidationError
 
 from rest_framework import status
@@ -5,11 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bookmarks.models import Bookmark
-from bookmarks.serializers import BookmarkUpdateSerializer
+from bookmarks.serializers import BookmarkSerializer
 
 
 class BookmarkBulkUpdateAPIView(APIView):
-    serializer_class = BookmarkUpdateSerializer
+    serializer_class = BookmarkSerializer
 
     def put(self, request, *args, **kwargs):
         bookmarks = request.data
@@ -27,18 +29,19 @@ class BookmarkBulkUpdateAPIView(APIView):
                 errors.append(f"{bookmark['id']} is not a valid id")
                 continue
 
-            serializer = self.serializer_class(data=bookmark)
+            serializer = self.serializer_class(instance=bookmark_obj, data=bookmark)
             if serializer.is_valid():
-                updated_bookmark = serializer.update(bookmark_obj, serializer.validated_data)
-                updated_bookmarks.append(updated_bookmark)
+                serializer.update(bookmark_obj, serializer.validated_data)
             else:
                 for field, message in serializer.errors.items():
                     errors.append(f'{field} {message[0].lower()}')
 
-        if not errors:
-            return Response(data=updated_bookmarks, status=status.HTTP_200_OK)
+        # Group the data by the 'category' field
+        grouped_data = defaultdict(list)
+        all_bookmarks = Bookmark.objects.all()
+        serialized_bookmarks = self.serializer_class(all_bookmarks, many=True).data
+        for item in serialized_bookmarks:
+            category = list(item.keys())[0]
+            grouped_data[category].append(item[category])
 
-        if len(errors) < len(bookmarks):
-            return Response(data={'bookmarks':updated_bookmarks, 'errors':errors}, status=status.HTTP_206_PARTIAL_CONTENT)
-
-        return Response(data={'errors':errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={'bookmarks': grouped_data}, status=status.HTTP_200_OK)
