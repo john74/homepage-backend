@@ -5,25 +5,24 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bookmarks.models import Bookmark
-
+from bookmarks.serializers import ShortcutSerializer
 
 class ShortcutBulkDeleteAPIView(APIView):
+    serializer_class = ShortcutSerializer
 
     def delete(self, request, *args, **kwargs):
         shortcut_ids = request.data.get('ids', [])
-        if not shortcut_ids:
-            return Response({'message': 'No IDs provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            shortcuts = Bookmark.objects.filter(id__in=shortcut_ids, is_shortcut=True)
-        except ValidationError as error:
-            return Response(data={"message":error}, status=status.HTTP_400_BAD_REQUEST)
+        # Fetch all shortcuts
+        all_shortcuts = Bookmark.objects.filter(is_shortcut=True)
 
-        if not shortcuts:
-            return Response({'message': 'No shortcuts found'}, status=status.HTTP_400_BAD_REQUEST)
+        # Filter shortcuts to be deleted
+        shortcuts_to_delete = all_shortcuts.filter(id__in=shortcut_ids)
+        shortcuts_to_delete.update(is_shortcut=False)
 
-        for shortcut in shortcuts:
-            shortcut.is_shortcut = False
-            shortcut.save()
+        # Exclude the deleted shortcuts from the original queryset and serialize the remaining shortcuts
+        all_shortcuts = all_shortcuts.exclude(id__in=shortcuts_to_delete.values('id'))
+        serialized_shortcuts = self.serializer_class(all_shortcuts, many=True).data
 
-        return Response(data={"message":"shortcuts deleted"}, status=status.HTTP_200_OK)
+        response_data = {'shortcuts': serialized_shortcuts}
+        return Response(data=response_data, status=status.HTTP_200_OK)
