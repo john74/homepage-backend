@@ -1,1 +1,2 @@
 from .group_bookmark_categories import group_bookmark_categories
+from .group_bookmarks import group_bookmarks
