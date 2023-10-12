@@ -14,21 +14,18 @@ class BookmarkBulkCreateAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         bookmarks = request.data
-        created_bookmarks = []
-        errors = []
+        serializer = self.bookmark_serializer(data=bookmarks, many=True)
+        if not serializer.is_valid():
+            return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
-        for bookmark_data in bookmarks:
-            serializer = self.bookmark_serializer(data=bookmark_data)
-            try:
-                serializer.is_valid(raise_exception=True)
-                created_bookmark = serializer.save(serializer.validated_data)
-                created_bookmarks.append(created_bookmark)
-            except ValidationError as e:
-                errors.append({'message': str(e), 'bookmark': bookmark_data})
+        serializer.save()
 
-        if errors:
-            return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+        all_bookmarks = Bookmark.objects.all()
+        serialized_bookmarks = self.bookmark_serializer(all_bookmarks, many=True).data
+        grouped_bookmarks = group_bookmarks(serialized_bookmarks)
 
-        grouped_bookmarks = group_bookmarks(created_bookmarks)
-        response_data = {'bookmarks': grouped_bookmarks}
+        shortcuts = all_bookmarks.filter(is_shortcut=True)
+        serialized_shortcuts = self.shortcut_serializer(shortcuts, many=True).data
+
+        response_data = {'bookmarks': grouped_bookmarks, 'shortcuts': serialized_shortcuts}
         return Response(data=response_data, status=status.HTTP_201_CREATED)
