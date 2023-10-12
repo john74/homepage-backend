@@ -51,7 +51,6 @@ class Bookmark(models.Model):
 
     class Meta:
         verbose_name_plural = 'Bookmarks'
-        ordering = ['created_at']
 
     def __str__(self):
         return f'{self.category.name} {self.name}'
