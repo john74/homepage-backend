@@ -10,5 +10,6 @@ class ShortcutSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'url',
-            'icon_url'
+            'icon_url',
+            'is_shortcut'
         ]
