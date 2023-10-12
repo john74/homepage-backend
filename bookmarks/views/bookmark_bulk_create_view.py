@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer
+from bookmarks.utils import group_bookmarks
 
 
 class BookmarkBulkCreateAPIView(APIView):
@@ -29,10 +28,6 @@ class BookmarkBulkCreateAPIView(APIView):
         if errors:
             return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Group the data by the 'category' field
-        grouped_data = defaultdict(list)
-        for item in created_bookmarks:
-            category = list(item.keys())[0]
-            grouped_data[category].append(item[category])
-
-        return Response({'bookmarks': grouped_data}, status=status.HTTP_201_CREATED)
+        grouped_bookmarks = group_bookmarks(created_bookmarks)
+        response_data = {'bookmarks': grouped_bookmarks}
+        return Response({'bookmarks': response_data}, status=status.HTTP_201_CREATED)

@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from django.core.exceptions import ValidationError
 
 from rest_framework import status
@@ -8,6 +6,7 @@ from rest_framework.views import APIView
 
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer
+from bookmarks.utils import group_bookmarks
 
 
 class BookmarkBulkUpdateAPIView(APIView):
@@ -36,12 +35,8 @@ class BookmarkBulkUpdateAPIView(APIView):
                 for field, message in serializer.errors.items():
                     errors.append(f'{field} {message[0].lower()}')
 
-        # Group the data by the 'category' field
-        grouped_data = defaultdict(list)
         all_bookmarks = Bookmark.objects.all()
         serialized_bookmarks = self.serializer_class(all_bookmarks, many=True).data
-        for item in serialized_bookmarks:
-            category = list(item.keys())[0]
-            grouped_data[category].append(item[category])
-
-        return Response(data={'bookmarks': grouped_data}, status=status.HTTP_200_OK)
+        grouped_bookmarks = group_bookmarks(serialized_bookmarks)
+        response_data = {'bookmarks': grouped_bookmarks}
+        return Response(data=response_data, status=status.HTTP_200_OK)

@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer
+from bookmarks.utils import group_bookmarks
 
 
 class BookmarkBulkDeleteAPIView(APIView):
@@ -25,12 +26,6 @@ class BookmarkBulkDeleteAPIView(APIView):
         # Exclude the deleted categories from the original queryset and serialize the remaining categories
         all_bookmarks = all_bookmarks.exclude(id__in=bookmarks_to_delete.values('id'))
         serialized_bookmarks = self.serializer_class(all_bookmarks, many=True).data
-
-        # Group the data by the 'category' field
-        grouped_data = defaultdict(list)
-        for item in serialized_bookmarks:
-            category = list(item.keys())[0]
-            grouped_data[category].append(item[category])
-
-        response_data = {'bookmarks': grouped_data}
+        grouped_bookmarks = group_bookmarks(serialized_bookmarks)
+        response_data = {'bookmarks': grouped_bookmarks}
         return Response(data=response_data, status=status.HTTP_200_OK)
