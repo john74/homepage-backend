@@ -26,7 +26,7 @@ class BookmarkCategoryBulkDeleteAPIView(APIView):
         serialized_categories = self.bookmark_category_serializer(all_categories, many=True).data
         grouped_categories = group_bookmark_categories(serialized_categories)
 
-        all_shortcuts = Bookmark.objects.filter(is_shortcut=True)
+        all_shortcuts = Bookmark.objects.filter(is_shortcut=True).order_by("created_at")
         serialized_shortcuts = self.shortcut_serializer(all_shortcuts, many=True).data
 
         response_data = {'categories': grouped_categories, 'shortcuts': serialized_shortcuts}
