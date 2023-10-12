@@ -5,12 +5,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bookmarks.models import Bookmark
-from bookmarks.serializers import BookmarkSerializer
+from bookmarks.serializers import BookmarkSerializer, ShortcutSerializer
 from bookmarks.utils import group_bookmarks
 
 
 class BookmarkBulkUpdateAPIView(APIView):
-    serializer_class = BookmarkSerializer
+    bookmark_serializer = BookmarkSerializer
+    shortcut_serializer = ShortcutSerializer
 
     def put(self, request, *args, **kwargs):
         bookmarks = request.data
@@ -28,7 +29,7 @@ class BookmarkBulkUpdateAPIView(APIView):
                 errors.append(f"{bookmark['id']} is not a valid id")
                 continue
 
-            serializer = self.serializer_class(instance=bookmark_obj, data=bookmark)
+            serializer = self.bookmark_serializer(instance=bookmark_obj, data=bookmark)
             if serializer.is_valid():
                 serializer.update(bookmark_obj, serializer.validated_data)
             else:
@@ -36,7 +37,11 @@ class BookmarkBulkUpdateAPIView(APIView):
                     errors.append(f'{field} {message[0].lower()}')
 
         all_bookmarks = Bookmark.objects.all()
-        serialized_bookmarks = self.serializer_class(all_bookmarks, many=True).data
+        serialized_bookmarks = self.bookmark_serializer(all_bookmarks, many=True).data
         grouped_bookmarks = group_bookmarks(serialized_bookmarks)
-        response_data = {'bookmarks': grouped_bookmarks}
+
+        shortcuts = all_bookmarks.filter(is_shortcut=True)
+        serialized_shortcuts = self.shortcut_serializer(shortcuts, many=True).data
+
+        response_data = {'bookmarks': grouped_bookmarks, 'shortcuts': serialized_shortcuts}
         return Response(data=response_data, status=status.HTTP_200_OK)
