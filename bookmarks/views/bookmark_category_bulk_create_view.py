@@ -4,29 +4,23 @@ from rest_framework.views import APIView
 
 from bookmarks.models import BookmarkCategory
 from bookmarks.serializers import BookmarkCategorySerializer
+from bookmarks.utils import group_bookmark_categories
 
 
 class BookmarkCategoryBulkCreateAPIView(APIView):
-    serializer_class = BookmarkCategorySerializer
+    bookmark_category_serializer = BookmarkCategorySerializer
 
     def post(self, request, *args, **kwargs):
         categories = request.data
-        created_categories = []
-        errors = []
+        serializer = self.bookmark_category_serializer(data=categories, many=True)
 
-        for category in categories:
-            serializer = self.serializer_class(data=category)
-            if serializer.is_valid():
-                created_category = serializer.save(serializer.validated_data)
-                created_categories.append(created_category)
-            else:
-                for field, message in serializer.errors.items():
-                    errors.append({'message':f'{field} {message[0].lower()}', 'category':category})
+        if not serializer.is_valid():
+            return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
 
-        if not errors:
-            return Response(data=created_categories, status=status.HTTP_200_OK)
+        all_bookmark_categories = BookmarkCategory.objects.all()
+        serialized_categories = self.bookmark_category_serializer(all_bookmark_categories, many=True).data
+        grouped_categories = group_bookmark_categories(serialized_categories)
 
-        if len(errors) < len(categories):
-            return Response(data={'bookmarks':created_categories, 'errors':errors}, status=status.HTTP_206_PARTIAL_CONTENT)
-
-        return Response(data={'errors':errors}, status=status.HTTP_400_BAD_REQUEST)
+        response_data = {'categories': grouped_categories}
+        return Response(data=response_data, status=status.HTTP_200_OK)
