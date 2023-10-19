@@ -7,9 +7,18 @@ from search_engines.serializers import SearchEngineSerializer
 
 
 class SearchEngineListAPIView(APIView):
-    serializer_class = SearchEngineSerializer
+    search_engine_serializer = SearchEngineSerializer
 
     def get(self, request, *args, **kwargs):
-        search_engines = SearchEngine.objects.all()
-        serializer = self.serializer_class(search_engines, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        engines = SearchEngine.objects.all()
+        default_engine = engines.filter(is_default=True).first()
+        non_default_engines = engines.filter(is_default=False)
+
+        serialized_default_engine = self.search_engine_serializer(default_engine).data
+        serialized_non_default_engines = self.search_engine_serializer(non_default_engines, many=True).data
+
+        response_data = {
+            "default": serialized_default_engine,
+            "nonDefault": serialized_non_default_engines,
+        }
+        return Response(data=response_data, status=status.HTTP_200_OK)
