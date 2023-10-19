@@ -1,2 +1,1 @@
 from .search_engine_serializer import SearchEngineSerializer
-from .search_engine_update_serializer import SearchEngineUpdateSerializer
