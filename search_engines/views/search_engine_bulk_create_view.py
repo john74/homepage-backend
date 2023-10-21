@@ -7,13 +7,29 @@ from search_engines.serializers import SearchEngineSerializer
 
 
 class SearchEngineBulkCreateAPIView(APIView):
-    serializer_class = SearchEngineSerializer
+    search_engine_serializer_class = SearchEngineSerializer
 
     def post(self, request, *args, **kwargs):
         search_engines = request.data
 
-        for engine in search_engines:
-            serializer = self.serializer_class(data=engine)
-            if serializer.is_valid():
-                SearchEngine.objects.create(**serializer.validated_data)
-        return Response(status=status.HTTP_200_OK)
+        serializer = self.search_engine_serializer_class(data=search_engines, many=True, partial=True)
+        if not serializer.is_valid():
+            return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
+
+        SearchEngine.objects.bulk_create([
+            SearchEngine(**engine) for engine in serializer.validated_data
+        ])
+
+        all_search_engines = SearchEngine.objects.all()
+        default_engine = all_search_engines.get(is_default=True)
+        non_default_engines = all_search_engines.filter(is_default=False)
+
+        serialized_default_engine = self.search_engine_serializer_class(default_engine).data
+        serialized_non_default_engines = self.search_engine_serializer_class(non_default_engines, many=True).data
+
+        response_data = {
+            "default": serialized_default_engine,
+            "nonDefault": serialized_non_default_engines,
+        }
+
+        return Response(data=response_data, status=status.HTTP_200_OK)
