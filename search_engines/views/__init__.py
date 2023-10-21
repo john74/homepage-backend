@@ -1,3 +1,4 @@
 from .search_engine_bulk_create_view import SearchEngineBulkCreateAPIView
 from .search_engine_bulk_update_view import SearchEngineBulkUpdateAPIView
+from .search_engine_bulk_delete_view import SearchEngineBulkDeleteAPIView
 from .search_engine_list_view import SearchEngineListAPIView
