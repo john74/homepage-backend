@@ -33,10 +33,10 @@ class SearchEngineBulkUpdateAPIView(APIView):
                 unchanged_engines.append(engine)
         all_search_engines = unchanged_engines + updated_engines
 
-        default_engine = [engine for engine in all_search_engines if engine.is_default]
+        default_engine = [engine for engine in all_search_engines if engine.is_default][0]
         non_default_engines = [engine for engine in all_search_engines if not engine.is_default]
 
-        serialized_default_engine = self.search_engine_serializer_class(default_engine, many=True).data
+        serialized_default_engine = self.search_engine_serializer_class(default_engine).data
         serialized_non_default_engines = self.search_engine_serializer_class(non_default_engines, many=True).data
 
         response_data = {
