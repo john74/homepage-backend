@@ -2,7 +2,6 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from commons.utils import format_error_message
 from users.serializers import UserSerializer
 
 
@@ -26,10 +25,9 @@ class SignUpAPIView(generics.GenericAPIView):
                 status=status.HTTP_201_CREATED
             )
 
-        error = format_error_message(serializer.errors)
         return Response(
             data={
-                "message": error,
+                "message": serializer.errors,
             },
             status=status.HTTP_400_BAD_REQUEST
         )
