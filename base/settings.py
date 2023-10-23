@@ -122,6 +122,7 @@ PROJECT_APPS = [
     'search_engines.apps.SearchEnginesConfig',
     'settings.apps.SettingsConfig',
     'users.apps.UsersConfig',
+    'frontend.apps.FrontendConfig',
 ]
 
 THIRD_PARTY_APPS = [
