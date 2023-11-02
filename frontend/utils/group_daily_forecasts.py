@@ -45,7 +45,8 @@ def group_daily_forecasts(data_by_day):
                 "wind_speed": forecast['wind']['speed'],
             })
 
-        daily_forecast["rest"] = rest_forecasts
-        grouped_forecasts.append(daily_forecast)
+        if len(rest_forecasts) > 2:
+            daily_forecast["rest"] = rest_forecasts
+            grouped_forecasts.append(daily_forecast)
 
     return grouped_forecasts
