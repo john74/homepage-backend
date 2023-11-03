@@ -13,7 +13,8 @@ class SettingSerializer(serializers.ModelSerializer):
             'longitude',
             'country',
             'city',
-            'metric_units',
+            'system_of_measurement',
+            'forecast_type',
             'open_weather_api_key',
             'timezone'
         ]
