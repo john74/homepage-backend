@@ -4,6 +4,11 @@ from django.db import models
 
 
 class Setting(models.Model):
+    UNIT_CHOICES = [
+        ("metric", "Metric"),
+        ("imperial", "Imperial"),
+        ("standard", "Standard"),
+    ]
     id = models.UUIDField(
         default=uuid.uuid4,
         primary_key=True,
@@ -43,10 +48,36 @@ class Setting(models.Model):
         verbose_name="City",
         help_text="Automatically derived from latitude and longitude"
     )
-    metric_units = models.BooleanField(
-        default=True,
-        verbose_name="Metric units",
-        help_text="If set to false, imperial units will be used"
+    system_of_measurement = models.CharField(
+        max_length=10,
+        choices=UNIT_CHOICES,
+        default="metric",
+        verbose_name="System of measurement",
+        help_text=(
+            "<strong>Metric:</strong>\n"
+            "Temperature Symbol: °C\n"
+            "Temperature Unit: Celsius\n"
+            "Speed: m/s\n"
+            "Humidity: %\n"
+            "Pressure: hPa\n"
+            "Visibility: m\n\n"
+            "\n\n"
+            "<strong>Imperial:</strong>\n"
+            "Temperature Symbol: °F\n"
+            "Temperature Unit: Fahrenheit\n"
+            "Speed: mph\n"
+            "Humidity: %\n"
+            "Pressure: hPa\n"
+            "Visibility: m\n\n"
+            "\n\n"
+            "<strong>Standard:</strong>\n"
+            "Temperature Symbol: K\n"
+            "Temperature Unit: Kelvin\n"
+            "Speed: m/s\n"
+            "Humidity: %\n"
+            "Pressure: hPa\n"
+            "Visibility: m"
+        )
     )
     timezone = models.CharField(
         max_length=100,
