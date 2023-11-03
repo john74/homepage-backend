@@ -1,2 +1,1 @@
 from .setting_serializer import SettingSerializer
-from .setting_update_serializer import SettingUpdateSerializer
