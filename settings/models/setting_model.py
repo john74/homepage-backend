@@ -4,11 +4,17 @@ from django.db import models
 
 
 class Setting(models.Model):
-    UNIT_CHOICES = [
+    SYSTEMS_OF_MEASUREMENT = [
         ("metric", "Metric"),
         ("imperial", "Imperial"),
         ("standard", "Standard"),
     ]
+
+    FORECAST_TYPES = [
+        ("hourly", "Hourly"),
+        ("weekly", "Weekly"),
+    ]
+
     id = models.UUIDField(
         default=uuid.uuid4,
         primary_key=True,
@@ -50,7 +56,7 @@ class Setting(models.Model):
     )
     system_of_measurement = models.CharField(
         max_length=10,
-        choices=UNIT_CHOICES,
+        choices=SYSTEMS_OF_MEASUREMENT,
         default="metric",
         verbose_name="System of measurement",
         help_text=(
@@ -78,6 +84,13 @@ class Setting(models.Model):
             "Pressure: hPa\n"
             "Visibility: m"
         )
+    )
+    forecast_type = models.CharField(
+        max_length=6,
+        choices=FORECAST_TYPES,
+        default="hourly",
+        verbose_name="Forecast type",
+        help_text="The default type of weather forecast data to be displayed."
     )
     timezone = models.CharField(
         max_length=100,
