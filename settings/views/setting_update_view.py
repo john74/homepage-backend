@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from settings.models import Setting
-from settings.serializers import SettingUpdateSerializer
+from settings.serializers import SettingSerializer
 
 
 class SettingUpdateAPIView(APIView):
-    serializer_class = SettingUpdateSerializer
+    serializer_class = SettingSerializer
 
     def put(self, request, *args, **kwargs):
         setting = Setting.objects.first()
