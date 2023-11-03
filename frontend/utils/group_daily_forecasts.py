@@ -17,8 +17,8 @@ def group_daily_forecasts(data_by_day):
             "month_day": date.strftime("%d"),
             "month_digit": date.strftime("%m"),
             "earliest": {
-                "hour": date.strftime('%H'),
-                "minute": date.strftime('%M'),
+                "hours": date.strftime('%H'),
+                "minutes": date.strftime('%M'),
                 "temperature": earliest_forecast['main']['temp'],
                 "description": earliest_forecast['weather'][0]['description'],
                 "feels_like_temperature": earliest_forecast['main']['feels_like'],
@@ -34,8 +34,8 @@ def group_daily_forecasts(data_by_day):
             timestamp = forecast["dt"]
             date = datetime.datetime.utcfromtimestamp(timestamp)
             rest_forecasts.append({
-                "hour": date.strftime('%H'),
-                "minute": date.strftime('%M'),
+                "hours": date.strftime('%H'),
+                "minutes": date.strftime('%M'),
                 "temperature": forecast['main']['temp'],
                 "description": forecast['weather'][0]['description'],
                 "feels_like_temperature": forecast['main']['feels_like'],
