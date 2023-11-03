@@ -26,6 +26,7 @@ class WeatherAPIView(APIView):
         open_weather_response = httpx.get(open_weather_url)
         weatherData =  open_weather_response.json()
 
+        default_forecast_type = setting.forecast_type
         current_weather_data = extract_current_weather_data(weatherData)
         extra_info = extract_extra_weather_data(weatherData)
         hourly_forecasts = extract_hourly_forecasts(weatherData)
@@ -36,6 +37,7 @@ class WeatherAPIView(APIView):
         units = OPEN_WEATHER_UNITS[setting.system_of_measurement]
 
         response_data = {
+            "default_forecast_type": default_forecast_type,
             "units": units,
             "current": current_weather_data,
             "extra_info": extra_info,
