@@ -88,7 +88,7 @@ class Setting(models.Model):
     forecast_type = models.CharField(
         max_length=6,
         choices=FORECAST_TYPES,
-        default="hourly",
+        default="weekly",
         verbose_name="Forecast type",
         help_text="The default type of weather forecast data to be displayed."
     )
