@@ -1,20 +1,31 @@
 from rest_framework import serializers
-from rest_framework.validators import ValidationError
+from rest_framework.validators import UniqueValidator
 from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(min_length=8, write_only=True)
+    all_users = User.objects.all();
+
+    password = serializers.CharField(
+        min_length=8,
+        write_only=True,
+        error_messages={
+            'min_length': 'Password must be at least 8 characters long.',
+        }
+    )
+
+    email = serializers.EmailField(
+        validators=[
+            UniqueValidator(
+                queryset=all_users,
+                message='A user with this email already exists.'
+            )
+        ]
+    )
 
     class Meta:
         model = User
         fields = ['email', 'username', 'password']
-
-    def validate(self, attrs):
-        email_exists = User.objects.filter(email=attrs['email'])
-        if email_exists:
-            raise ValidationError('A user with this email already exists')
-        return super().validate(attrs)
 
     def create(self, validated_data):
         password = validated_data.pop('password')
