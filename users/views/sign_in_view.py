@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 
 from django.contrib.auth import authenticate
 
@@ -22,7 +22,7 @@ class SignInAPIView(APIView):
 
         # in case we don't delete the users but deactivate them
         if not user or not user.is_active:
-            return Response(data={"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(data={"error": "Invalid credentials. Please check your email and password and try again."}, status=status.HTTP_401_UNAUTHORIZED)
 
         refresh_token = RefreshToken.for_user(user)
 
@@ -37,6 +37,6 @@ class SignInAPIView(APIView):
         }
         response.status = status.HTTP_200_OK
 
-        user.last_login = datetime.now()
+        user.last_login = timezone.now()
         user.save()
         return response
