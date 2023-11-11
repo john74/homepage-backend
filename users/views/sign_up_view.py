@@ -3,6 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from users.serializers import UserSerializer
+from base.utils import get_serializer_error
 
 
 class SignUpAPIView(generics.GenericAPIView):
@@ -11,23 +12,13 @@ class SignUpAPIView(generics.GenericAPIView):
     is valid.
     """
     permission_classes = [AllowAny,]
+    user_serializer_class = UserSerializer
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = self.user_serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.create(serializer.validated_data)
-            return Response(
-                data={
-                    "message": "User created successfully",
-                    "status": status.HTTP_201_CREATED,
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return Response(data={"message": "Your account has been created successfully"}, status=status.HTTP_201_CREATED)
 
-        return Response(
-            data={
-                "message": serializer.errors,
-            },
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        error = get_serializer_error(serializer.errors);
+        return Response(data={"error": error}, status=status.HTTP_400_BAD_REQUEST)
