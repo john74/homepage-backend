@@ -1,9 +1,12 @@
 from rest_framework import serializers
 
+from base.validators import URLValidator
 from bookmarks.models import Bookmark
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
+    url = serializers.CharField(validators=[URLValidator()])
+    icon_url = serializers.CharField(validators=[URLValidator()])
     class Meta:
         model = Bookmark
         fields = [
