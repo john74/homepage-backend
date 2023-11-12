@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 
+from base.utils import get_serializer_error
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer, ShortcutSerializer
 from bookmarks.utils import group_bookmarks
@@ -16,7 +17,8 @@ class BookmarkBulkCreateAPIView(APIView):
         bookmarks = request.data
         serializer = self.bookmark_serializer(data=bookmarks, many=True)
         if not serializer.is_valid():
-            return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
+            error = get_serializer_error(serializer.errors)
+            return Response(data={"error": error}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
 
@@ -27,5 +29,9 @@ class BookmarkBulkCreateAPIView(APIView):
         shortcuts = all_bookmarks.filter(is_shortcut=True)
         serialized_shortcuts = self.shortcut_serializer(shortcuts, many=True).data
 
-        response_data = {'bookmarks': grouped_bookmarks, 'shortcuts': serialized_shortcuts}
+        response_data = {
+            "message": "Bookmark created successfully.",
+            "bookmarks": grouped_bookmarks,
+            "shortcuts": serialized_shortcuts
+        }
         return Response(data=response_data, status=status.HTTP_201_CREATED)
