@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from base.utils import get_serializer_error
 from search_engines.models import SearchEngine
 from search_engines.serializers import SearchEngineSerializer
 
@@ -14,7 +15,8 @@ class SearchEngineBulkCreateAPIView(APIView):
 
         serializer = self.search_engine_serializer_class(data=search_engines, many=True, partial=True)
         if not serializer.is_valid():
-            return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
+            error = get_serializer_error(serializer.errors)
+            return Response(data={"error": error}, status=status.HTTP_400_BAD_REQUEST)
 
         SearchEngine.objects.bulk_create([
             SearchEngine(**engine) for engine in serializer.validated_data
@@ -28,6 +30,7 @@ class SearchEngineBulkCreateAPIView(APIView):
         serialized_non_default_engines = self.search_engine_serializer_class(non_default_engines, many=True).data
 
         response_data = {
+            "message": "Search engine created successfully.",
             "default": serialized_default_engine,
             "nonDefault": serialized_non_default_engines,
         }
