@@ -37,6 +37,7 @@ class WeatherAPIView(APIView):
         units = OPEN_WEATHER_UNITS[setting.system_of_measurement]
 
         response_data = {
+            "message": "Weather data updated",
             "forecast_type": forecast_type,
             "units": units,
             "current": current_weather_data,
