@@ -13,9 +13,20 @@ class SearchEngineBulkDeleteAPIView(APIView):
 
     def delete(self, request, *args, **kwargs):
         search_engine_ids = request.data.get('ids', [])
+
+        if not search_engine_ids:
+            return Response(data={"error": "No search engine found"}, status=status.HTTP_400_BAD_REQUEST)
+
         all_search_engines = SearchEngine.objects.all()
 
-        search_engines_to_delete = all_search_engines.filter(id__in=search_engine_ids)
+        try:
+            search_engines_to_delete = all_search_engines.filter(id__in=search_engine_ids)
+        except (ValidationError) as error:
+            return Response(data={"error": "No search engine found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not search_engines_to_delete:
+            return Response(data={"error": "No search engine found"}, status=status.HTTP_400_BAD_REQUEST)
+
         search_engines_to_delete.delete()
 
         all_search_engines = all_search_engines.exclude(id__in=search_engines_to_delete.values('id'))
@@ -26,6 +37,7 @@ class SearchEngineBulkDeleteAPIView(APIView):
         serialized_non_default_engines = self.search_engine_serializer_class(non_default_engines, many=True).data
 
         response_data = {
+            "message": "Search engine deleted successfully.",
             "default": serialized_default_engine,
             "nonDefault": serialized_non_default_engines,
         }
