@@ -14,6 +14,9 @@ class BookmarkCategoryBulkDeleteAPIView(APIView):
     def delete(self, request, *args, **kwargs):
         category_ids = request.data.get('ids', [])
 
+        if not category_ids:
+            return Response(data={"error": "No bookmark categories found"}, status=status.HTTP_400_BAD_REQUEST)
+
         # Fetch all categories
         all_categories = BookmarkCategory.objects.all()
 
@@ -29,6 +32,11 @@ class BookmarkCategoryBulkDeleteAPIView(APIView):
         all_shortcuts = Bookmark.objects.filter(is_shortcut=True).order_by("created_at")
         serialized_shortcuts = self.shortcut_serializer(all_shortcuts, many=True).data
 
-        response_data = {'categories': grouped_categories, 'shortcuts': serialized_shortcuts}
+        response_data = {
+            "message": "Bookmark category deleted successfully.",
+            "categories": grouped_categories,
+            "shortcuts": serialized_shortcuts
+        }
+
         return Response(data=response_data, status=status.HTTP_200_OK)
 
