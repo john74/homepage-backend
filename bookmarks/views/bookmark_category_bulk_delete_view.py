@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -21,7 +23,14 @@ class BookmarkCategoryBulkDeleteAPIView(APIView):
         all_categories = BookmarkCategory.objects.all()
 
         # Filter categories to be deleted
-        categories_to_delete = all_categories.filter(id__in=category_ids)
+        try:
+            categories_to_delete = all_categories.filter(id__in=category_ids)
+        except (ValidationError) as error:
+            return Response(data={"error": "No bookmark category found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not categories_to_delete:
+            return Response(data={"error": "No bookmark category found"}, status=status.HTTP_400_BAD_REQUEST)
+
         categories_to_delete.delete()
 
         # Exclude categories that need to be deleted from the original 'all_categories' queryset
