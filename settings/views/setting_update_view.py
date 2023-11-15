@@ -19,7 +19,10 @@ class SettingUpdateAPIView(APIView):
             serializer.update(setting, serializer.validated_data)
             setting = Setting.objects.first()
             serialized_setting = self.setting_serializer_class(setting).data
-            response_data = {'settings': serialized_setting}
+            response_data = {
+                "message": "Setting updated successfully",
+                "settings": serialized_setting
+            }
             return Response(data=response_data, status=status.HTTP_200_OK)
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
