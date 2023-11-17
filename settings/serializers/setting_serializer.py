@@ -13,6 +13,7 @@ class SettingSerializer(serializers.ModelSerializer):
             'country',
             'city',
             'system_of_measurement',
+            "bookmark_category_group_size",
             'forecast_type',
             'open_weather_api_key',
             'timezone'
