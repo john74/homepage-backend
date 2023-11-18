@@ -4,11 +4,11 @@ from settings.models import Setting
 
 class SettingAdmin(admin.ModelAdmin):
     fields = [
-        'latitude', 'longitude', 'open_weather_api_key', 'bookmark_category_group_size',
+        'latitude', 'longitude', 'open_weather_api_key', "weather_data_update_interval", "weather_data_last_updated", 'bookmark_category_group_size',
         'system_of_measurement', 'forecast_type', 'country', 'city', 'timezone',
     ]
     readonly_fields = [
-        'country', 'city', 'timezone',
+        'country', 'city', 'timezone', "weather_data_last_updated",
     ]
     list_display = [
         'country', 'city', 'latitude', 'longitude',
