@@ -1,6 +1,9 @@
 import inspect, uuid
 
 from django.db import models
+from django.core.validators import (
+    MinValueValidator, MaxValueValidator,
+)
 
 
 class Setting(models.Model):
@@ -98,6 +101,22 @@ class Setting(models.Model):
         null=True,
         verbose_name="Timezone",
         help_text="Automatically derived from latitude and longitude"
+    )
+    weather_data_last_updated = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Weather data last updated"
+    )
+    weather_data_update_interval = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        default=60,
+        validators=[
+            MinValueValidator(limit_value=10),
+            MaxValueValidator(limit_value=1440),
+        ],
+        verbose_name="Weather data refresh interval (minutes)",
+        help_text="The duration (in minutes) that must elapse before the weather data can be manually or automatically updated again."
     )
     bookmark_category_group_size = models.PositiveIntegerField(
         default=6,
