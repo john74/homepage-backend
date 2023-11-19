@@ -60,3 +60,9 @@ class BookmarkSubCategory(models.Model):
 
     def __str__(self):
         return f'{self.category.name} {self.name}'
+
+    def save(self, *args, **kwargs):
+        # Set the user before saving
+        if not self.user_id:
+            self.user = self.category.user if self.category else None
+        super().save(*args, **kwargs)
