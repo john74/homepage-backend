@@ -118,6 +118,11 @@ class Setting(models.Model):
         verbose_name="Weather data refresh interval (minutes)",
         help_text="The duration (in minutes) that must elapse before the weather data can be manually or automatically updated again."
     )
+    show_bookmark_sub_categories = models.BooleanField(
+        default=True,
+        verbose_name="Show bookmark sub categories",
+        help_text="If checked, bookmarks will be organized under subcategories within the category."
+    )
     bookmark_category_group_size = models.PositiveIntegerField(
         default=6,
         blank=True,
