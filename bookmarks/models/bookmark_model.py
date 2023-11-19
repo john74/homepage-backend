@@ -1,8 +1,11 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 
-from . import BookmarkCategory
+from bookmarks.models import (
+    BookmarkCategory
+)
 
 
 class Bookmark(models.Model):
@@ -15,6 +18,18 @@ class Bookmark(models.Model):
         BookmarkCategory,
         on_delete=models.CASCADE,
         verbose_name="Bookmark Category",
+    )
+    sub_category = models.ForeignKey(
+        "bookmarks.BookmarkSubCategory",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="Bookmark Sub Category",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="User",
     )
     name = models.CharField(
         max_length=50,
