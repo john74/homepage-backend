@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 import httpx
 
 from base.utils import decrypt_data
@@ -10,8 +12,8 @@ from frontend.constants import OPEN_WEATHER_UNITS
 from settings.models import Setting
 
 
-def retrieve_weather_data():
-    setting = Setting.objects.first()
+def retrieve_weather_data(setting=None):
+    setting = Setting.objects.first() if not setting else setting
     if not setting:
         return {}
 
@@ -37,7 +39,12 @@ def retrieve_weather_data():
     grouped_daily_forecasts = group_daily_forecasts(daily_forecasts)
     units = OPEN_WEATHER_UNITS[setting.system_of_measurement]
 
+    setting.weather_data_last_updated = timezone.now()
+    setting.save()
+
     return {
+        "last_updated": setting.weather_data_last_updated,
+        "update_interval": setting.weather_data_update_interval,
         "forecast_type": forecast_type,
         "units": units,
         "current": current_weather_data,
