@@ -14,6 +14,8 @@ class SettingSerializer(serializers.ModelSerializer):
             'city',
             'system_of_measurement',
             "bookmark_category_group_size",
+            "weather_data_last_updated",
+            "weather_data_update_interval",
             'forecast_type',
             'open_weather_api_key',
             'timezone'
