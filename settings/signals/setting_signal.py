@@ -9,6 +9,8 @@ from settings.utils import get_location_info
 @receiver(pre_save, sender=Setting)
 def populate_setting_fields(sender, **kwargs):
     setting = kwargs["instance"]
+    if setting.country:
+        return
 
     response = get_location_info(setting)
     open_weather_api_key = getattr(setting, "open_weather_api_key")
