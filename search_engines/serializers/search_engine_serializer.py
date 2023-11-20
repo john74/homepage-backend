@@ -13,5 +13,6 @@ class SearchEngineSerializer(serializers.ModelSerializer):
             'method',
             'name_attribute',
             'is_default',
+            'user',
             'created_at',
         ]
