@@ -7,30 +7,32 @@ from users.models import User
 
 
 @receiver(post_save, sender=User)
-def add_search_engines(sender=None, **kwargs):
+def add_predefined_search_engines(sender, **kwargs):
     """
     Populates the Search Engines table with all available engines in
     SEARCH_ENGINES_DATA list, setting Google as the default.
     """
-    if SearchEngine.objects.exists():
+    user_id = kwargs.get("user", None) or kwargs["instance"].id
+    if SearchEngine.objects.filter(user=user_id):
         return
 
     for engine_data in SEARCH_ENGINES_DATA:
+        engine_data['user'] = user_id
         if engine_data['name'].lower() == 'google':
             engine_data['is_default'] = True
-
         SearchEngine.objects.create(**engine_data)
 
 @receiver([post_save, post_delete], sender=SearchEngine)
-def set_default_search_engine_on_change(sender, **kwargs):
+def set_default_search_engine(sender, **kwargs):
     """
     Ensures the presence of at least one search engine and enforces a single default engine.
     """
-    search_engines = SearchEngine.objects.all()
+    user_id = kwargs["instance"].user.id
+    search_engines = SearchEngine.objects.filter(user=user_id)
     # Check if there are no existing SearchEngine objects in the database.
     # If none exist, re-add all the default search engines.
     if not search_engines:
-        add_search_engines()
+        add_predefined_search_engines(sender=sender, user=user_id)
         return
 
     default_search_engines = search_engines.filter(is_default=True)
