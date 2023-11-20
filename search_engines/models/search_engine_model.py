@@ -59,6 +59,7 @@ class SearchEngine(models.Model):
         verbose_name="Is Default",
         help_text="This search engine will be used as the default. Only one search engine can be set as the default"
     )
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(
         null=True,
         blank=True
