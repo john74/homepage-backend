@@ -13,7 +13,8 @@ class SearchEngineBulkUpdateAPIView(APIView):
     search_engine_serializer_class = SearchEngineSerializer
 
     def put(self, request, *args, **kwargs):
-        all_search_engines = SearchEngine.objects.all()
+        user_id = request.user.id
+        all_search_engines = SearchEngine.objects.filter(user=user_id)
         updated_engines = []
 
         for engine in request.data:
