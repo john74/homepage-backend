@@ -6,4 +6,4 @@ class UsersConfig(AppConfig):
     name = 'users'
 
     def ready(self):
-        from search_engines.signals import add_search_engines
+        from search_engines.signals import add_predefined_search_engines
