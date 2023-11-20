@@ -12,5 +12,6 @@ class SearchEngineSerializer(serializers.ModelSerializer):
             'url',
             'method',
             'name_attribute',
-            'is_default'
+            'is_default',
+            'created_at',
         ]
