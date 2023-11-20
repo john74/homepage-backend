@@ -17,7 +17,8 @@ class SearchEngineBulkDeleteAPIView(APIView):
         if not search_engine_ids:
             return Response(data={"error": "No search engine found"}, status=status.HTTP_400_BAD_REQUEST)
 
-        all_search_engines = SearchEngine.objects.all()
+        user_id = request.user.id
+        all_search_engines = SearchEngine.objects.filter(user=user_id)
 
         try:
             search_engines_to_delete = all_search_engines.filter(id__in=search_engine_ids)
