@@ -10,7 +10,8 @@ class SearchEngineListAPIView(APIView):
     search_engine_serializer = SearchEngineSerializer
 
     def get(self, request, *args, **kwargs):
-        engines = SearchEngine.objects.all()
+        user_id = request.user.id
+        engines = SearchEngine.objects.filter(user=user_id)
         default_engine = engines.filter(is_default=True).first()
         non_default_engines = engines.filter(is_default=False)
 
