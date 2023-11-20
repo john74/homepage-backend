@@ -2,8 +2,6 @@ import uuid
 from django.conf import settings
 from django.db import models
 
-from bookmarks.models import BookmarkCategory
-
 
 class BookmarkSubCategory(models.Model):
     id = models.UUIDField(
@@ -12,7 +10,7 @@ class BookmarkSubCategory(models.Model):
         editable=False
     )
     category = models.ForeignKey(
-        BookmarkCategory,
+        "bookmarks.BookmarkCategory",
         on_delete=models.CASCADE,
         verbose_name="Bookmark Category",
     )
