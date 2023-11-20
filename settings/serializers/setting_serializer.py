@@ -18,5 +18,6 @@ class SettingSerializer(serializers.ModelSerializer):
             "weather_data_update_interval",
             'forecast_type',
             'open_weather_api_key',
-            'timezone'
+            'timezone',
+            'user'
         ]
