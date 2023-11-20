@@ -10,15 +10,16 @@ class SettingUpdateAPIView(APIView):
     setting_serializer_class = SettingSerializer
 
     def put(self, request, *args, **kwargs):
-        setting = Setting.objects.first()
+        user_id = request.user.id
+        setting = Setting.objects.filter(user=user_id).first()
         if not setting:
             return Response(data={'errors':"No setting to update"}, status=status.HTTP_400_BAD_REQUEST)
 
+        request.data["user"] = user_id
         serializer = self.setting_serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.update(setting, serializer.validated_data)
-            setting = Setting.objects.first()
-            serialized_setting = self.setting_serializer_class(setting).data
+            updated_setting = serializer.update(setting, serializer.validated_data)
+            serialized_setting = self.setting_serializer_class(updated_setting).data
             response_data = {
                 "message": "Setting updated successfully",
                 "settings": serialized_setting
