@@ -12,8 +12,8 @@ from frontend.constants import OPEN_WEATHER_UNITS
 from settings.models import Setting
 
 
-def retrieve_weather_data(setting=None):
-    setting = Setting.objects.first() if not setting else setting
+def retrieve_weather_data(setting=None, user_id=None):
+    setting = Setting.objects.filter(user=user_id).first() if user_id else setting
     if not setting:
         return {}
 
