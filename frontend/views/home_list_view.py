@@ -24,20 +24,21 @@ class HomeListAPIView(APIView):
     search_engine_serializer_class = SearchEngineSerializer
 
     def get(self, request, *args, **kwargs):
-        weather_data = retrieve_weather_data()
+        user_id = request.user.id
+        weather_data = retrieve_weather_data(user_id=user_id)
 
-        all_bookmarks = Bookmark.objects.all()
+        all_bookmarks = Bookmark.objects.filter(user=user_id)
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
         grouped_bookmarks = group_bookmarks(serialized_bookmarks)
 
-        all_bookmark_categories = BookmarkCategory.objects.all()
+        all_bookmark_categories = BookmarkCategory.objects.filter(user=user_id)
         serialized_categories = self.bookmark_category_serializer_class(all_bookmark_categories, many=True).data
         grouped_categories = group_bookmark_categories(serialized_categories)
 
         all_shortcuts = all_bookmarks.filter(is_shortcut=True)
         serialized_shortcuts = self.shortcut_serializer_class(all_shortcuts, many=True).data
 
-        all_search_engines = SearchEngine.objects.all()
+        all_search_engines = SearchEngine.objects.filter(user=user_id)
         default_engine = all_search_engines.get(is_default=True)
         non_default_engines = all_search_engines.filter(is_default=False)
 
