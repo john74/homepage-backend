@@ -19,7 +19,8 @@ from settings.models import Setting
 class WeatherAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
-        setting = Setting.objects.first()
+        user_id = request.user.id
+        setting = Setting.objects.filter(user=user_id).first()
         if not setting:
             return Response(data={"error": "No weather data available"}, status=status.HTTP_400_BAD_REQUEST)
 
