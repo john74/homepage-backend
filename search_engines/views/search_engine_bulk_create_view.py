@@ -11,7 +11,10 @@ class SearchEngineBulkCreateAPIView(APIView):
     search_engine_serializer_class = SearchEngineSerializer
 
     def post(self, request, *args, **kwargs):
-        search_engines = request.data
+        user_id = request.user.id
+        search_engines = [
+            {**engine, "user": user_id} for engine in request.data
+        ]
 
         serializer = self.search_engine_serializer_class(data=search_engines, many=True, partial=True)
         if not serializer.is_valid():
@@ -22,7 +25,14 @@ class SearchEngineBulkCreateAPIView(APIView):
             SearchEngine(**engine) for engine in serializer.validated_data
         ])
 
-        all_search_engines = SearchEngine.objects.all()
+        all_search_engines = SearchEngine.objects.filter(user=user_id)
+        default_search_engines = all_search_engines.filter(is_default=True)
+        if len(default_search_engines) > 1:
+            new_default_engine = default_search_engines.latest("created_at")
+            rest_default_engines = default_search_engines.exclude(id=new_default_engine.id)
+            rest_default_engines.update(is_default=False)
+
+        all_search_engines = SearchEngine.objects.filter(user=user_id)
         default_engine = all_search_engines.get(is_default=True)
         non_default_engines = all_search_engines.filter(is_default=False)
 
