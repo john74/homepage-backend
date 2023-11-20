@@ -11,9 +11,11 @@ class SettingCreateAPIView(APIView):
     setting_serializer_class = SettingSerializer
 
     def post(self, request, *args, **kwargs):
-        if Setting.objects.exists():
+        user_id = request.user.id
+        if Setting.objects.filter(user=user_id):
             return Response(data={"errors": "Setting exists. Cannot add another one"}, status=status.HTTP_400_BAD_REQUEST)
 
+        request.data["user"] = request.user.id
         serializer = self.setting_serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
