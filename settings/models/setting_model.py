@@ -1,5 +1,6 @@
 import inspect, uuid
 
+from django.conf import settings
 from django.db import models
 from django.core.validators import (
     MinValueValidator, MaxValueValidator,
@@ -22,6 +23,11 @@ class Setting(models.Model):
         default=uuid.uuid4,
         primary_key=True,
         editable=False
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="User",
     )
     latitude = models.CharField(
         blank=True,
