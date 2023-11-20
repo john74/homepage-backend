@@ -1,8 +1,11 @@
 import inspect, uuid
 from datetime import datetime
 
+from django.conf import settings
 from django.db import models
-from django.db.models import Case, When, Value, CharField, Q
+from django.db.models import (
+    Case, When, Value, CharField, Q
+)
 
 
 class SearchEngineManager(models.Manager):
@@ -25,6 +28,11 @@ class SearchEngine(models.Model):
         default=uuid.uuid4,
         primary_key=True,
         editable=False
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="User",
     )
     name = models.CharField(
         max_length=50,
