@@ -8,11 +8,12 @@ from bookmarks.utils import group_bookmarks
 
 
 class BookmarkListAPIView(APIView):
-    serializer_class = BookmarkSerializer
+    bookmark_serializer_class = BookmarkSerializer
 
     def get(self, request, *args, **kwargs):
-        bookmarks = Bookmark.objects.all()
-        serialized_bookmarks = self.serializer_class(bookmarks, many=True).data
+        user_id = request.user.id
+        bookmarks = Bookmark.objects.filter(user=user_id)
+        serialized_bookmarks = self.bookmark_serializer_class(bookmarks, many=True).data
 
         grouped_bookmarks = group_bookmarks(serialized_bookmarks)
         response_data = {'bookmarks': grouped_bookmarks}
