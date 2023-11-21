@@ -19,8 +19,9 @@ class ShortcutBulkDeleteAPIView(APIView):
         if not shortcut_ids:
             return Response(data={"error": "No shortcut found"}, status=status.HTTP_400_BAD_REQUEST)
 
+        user_id = request.user.id
         # Fetch all bookmarks
-        all_bookmarks = Bookmark.objects.all()
+        all_bookmarks = Bookmark.objects.filter(user=user_id)
         # Filter shortcuts to be soft deleted
         try:
             shortcuts_to_delete = all_bookmarks.filter(id__in=shortcut_ids)
