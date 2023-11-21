@@ -1,8 +1,8 @@
 from settings.models import Setting
 
 
-def group_bookmark_categories(categories):
-    setting = Setting.objects.first()
+def group_bookmark_categories(user_id, categories):
+    setting = Setting.objects.filter(user=user_id).first()
     group_size = setting.bookmark_category_group_size if setting else None
 
     if not group_size:
