@@ -14,6 +14,6 @@ class BookmarkCategoryListAPIView(APIView):
         user_id = request.user.id
         all_categories = BookmarkCategory.objects.filter(user=user_id)
         serialized_categories = self.bookmark_category_serializer_class(all_categories, many=True).data
-        grouped_categories = group_bookmark_categories(serialized_categories)
+        grouped_categories = group_bookmark_categories(user_id, serialized_categories)
         response_data = {'categories': grouped_categories}
         return Response(data=response_data, status=status.HTTP_200_OK)

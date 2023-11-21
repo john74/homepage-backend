@@ -37,7 +37,7 @@ class BookmarkCategoryBulkDeleteAPIView(APIView):
         # Exclude categories that need to be deleted from the original 'all_categories' queryset
         all_categories = all_categories.exclude(id__in=categories_to_delete.values('id'))
         serialized_categories = self.bookmark_category_serializer_class(all_categories, many=True).data
-        grouped_categories = group_bookmark_categories(serialized_categories)
+        grouped_categories = group_bookmark_categories(user_id, serialized_categories)
 
         all_shortcuts = Bookmark.objects.filter(is_shortcut=True).order_by("created_at")
         serialized_shortcuts = self.shortcut_serializer_class(all_shortcuts, many=True).data

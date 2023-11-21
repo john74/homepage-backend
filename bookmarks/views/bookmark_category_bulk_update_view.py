@@ -34,7 +34,7 @@ class BookmarkCategoryBulkUpdateAPIView(APIView):
         # Retrieve all categories
         all_categories = BookmarkCategory.objects.filter(user=user_id)
         serialized_categories = self.bookmark_category_serializer_class(all_categories, many=True).data
-        grouped_categories = group_bookmark_categories(serialized_categories)
+        grouped_categories = group_bookmark_categories(user_id, serialized_categories)
 
         response_data = {
             "message": "Category updated successfully.",

@@ -33,7 +33,7 @@ class HomeListAPIView(APIView):
 
         all_bookmark_categories = BookmarkCategory.objects.filter(user=user_id)
         serialized_categories = self.bookmark_category_serializer_class(all_bookmark_categories, many=True).data
-        grouped_categories = group_bookmark_categories(serialized_categories)
+        grouped_categories = group_bookmark_categories(user_id, serialized_categories)
 
         all_shortcuts = all_bookmarks.filter(is_shortcut=True)
         serialized_shortcuts = self.shortcut_serializer_class(all_shortcuts, many=True).data
