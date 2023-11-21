@@ -19,8 +19,9 @@ class BookmarkBulkDeleteAPIView(APIView):
         if not bookmark_ids:
             return Response(data={"error": "No bookmark found"}, status=status.HTTP_400_BAD_REQUEST)
 
+        user_id = request.user.id
         # Fetch all bookmarks
-        all_bookmarks = Bookmark.objects.all()
+        all_bookmarks = Bookmark.objects.filter(user=user_id)
 
         # Filter bookmarks to be deleted
         try:
