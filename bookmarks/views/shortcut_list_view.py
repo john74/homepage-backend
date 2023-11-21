@@ -7,9 +7,10 @@ from bookmarks.serializers import ShortcutSerializer
 
 
 class ShortcutListAPIView(APIView):
-    serializer_class = ShortcutSerializer
+    shortcut_serializer_class = ShortcutSerializer
 
     def get(self, request, *args, **kwargs):
-        shortcuts = Bookmark.objects.filter(is_shortcut=True)
-        serializer = self.serializer_class(shortcuts, many=True)
+        user_id = request.user.id
+        shortcuts = Bookmark.objects.filter(user=user_id, is_shortcut=True)
+        serializer = self.shortcut_serializer_class(shortcuts, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
