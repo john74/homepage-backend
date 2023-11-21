@@ -11,7 +11,8 @@ class BookmarkCategorySerializer(serializers.ModelSerializer):
             'name',
             'color',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'user',
         ]
 
     def update(self, instance, validated_data):
