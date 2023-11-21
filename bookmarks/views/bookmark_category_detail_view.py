@@ -9,13 +9,13 @@ from bookmarks.serializers import BookmarkCategorySerializer
 
 
 class BookmarkCategoryDetailAPIView(APIView):
-    serializer_class = BookmarkCategorySerializer
+    bookmark_category_serializer_class = BookmarkCategorySerializer
 
     def get(self, request, category_id, *args, **kwargs):
-        try:
-            category = BookmarkCategory.objects.get(id=category_id)
-        except (BookmarkCategory.DoesNotExist, ValidationError):
+        user_id = request.user.id
+        category = BookmarkCategory.objects.filter(user=user_id, id=category_id).first()
+        if not category:
             return Response(data={"errors":"No category found"}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.serializer_class(category)
+        serializer = self.bookmark_category_serializer_class(category)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
