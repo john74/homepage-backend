@@ -12,7 +12,10 @@ class BookmarkCategoryBulkCreateAPIView(APIView):
     bookmark_category_serializer_class = BookmarkCategorySerializer
 
     def post(self, request, *args, **kwargs):
-        categories = request.data
+        user_id = request.user.id
+        categories = [
+            {**category, "user": user_id} for category in request.data
+        ]
         serializer = self.bookmark_category_serializer_class(data=categories, many=True)
 
         if not serializer.is_valid():
@@ -21,7 +24,7 @@ class BookmarkCategoryBulkCreateAPIView(APIView):
 
         serializer.save()
 
-        all_bookmark_categories = BookmarkCategory.objects.all()
+        all_bookmark_categories = BookmarkCategory.objects.filter(user=user_id)
         serialized_categories = self.bookmark_category_serializer_class(all_bookmark_categories, many=True).data
         grouped_categories = group_bookmark_categories(serialized_categories)
 
