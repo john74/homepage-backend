@@ -17,7 +17,9 @@ class BookmarkSerializer(serializers.ModelSerializer):
             'icon_url',
             'is_shortcut',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'sub_category',
+            'user',
         ]
 
     def to_representation(self, instance):
