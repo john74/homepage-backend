@@ -10,24 +10,25 @@ from bookmarks.utils import group_bookmarks
 
 
 class BookmarkBulkCreateAPIView(APIView):
-    bookmark_serializer = BookmarkSerializer
-    shortcut_serializer = ShortcutSerializer
+    bookmark_serializer_class = BookmarkSerializer
+    shortcut_serializer_class = ShortcutSerializer
 
     def post(self, request, *args, **kwargs):
         bookmarks = request.data
-        serializer = self.bookmark_serializer(data=bookmarks, many=True)
+        serializer = self.bookmark_serializer_class(data=bookmarks, many=True)
         if not serializer.is_valid():
             error = get_serializer_error(serializer.errors)
             return Response(data={"error": error}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
 
-        all_bookmarks = Bookmark.objects.all()
-        serialized_bookmarks = self.bookmark_serializer(all_bookmarks, many=True).data
+        user_id = request.user.id
+        all_bookmarks = Bookmark.objects.filter(user=user_id)
+        serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
         grouped_bookmarks = group_bookmarks(serialized_bookmarks)
 
         shortcuts = all_bookmarks.filter(is_shortcut=True)
-        serialized_shortcuts = self.shortcut_serializer(shortcuts, many=True).data
+        serialized_shortcuts = self.shortcut_serializer_class(shortcuts, many=True).data
 
         response_data = {
             "message": "Bookmark created successfully.",
