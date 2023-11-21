@@ -13,11 +13,13 @@ class BookmarkBulkUpdateAPIView(APIView):
     shortcut_serializer_class = ShortcutSerializer
 
     def put(self, request, *args, **kwargs):
-        bookmarks = request.data
-
+        user_id = request.user.id
+        bookmarks = [
+            {**bookmark, "user": user_id} for bookmark in request.data
+        ]
         for bookmark in bookmarks:
             try:
-                bookmark_obj = Bookmark.objects.get(id=bookmark['id'])
+                bookmark_obj = Bookmark.objects.get(user=user_id, id=bookmark['id'])
             except (Bookmark.DoesNotExist, KeyError):
                 return Response(data={"error": "Bookmark not found"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -28,7 +30,7 @@ class BookmarkBulkUpdateAPIView(APIView):
 
             serializer.update(bookmark_obj, serializer.validated_data)
 
-        all_bookmarks = Bookmark.objects.all()
+        all_bookmarks = Bookmark.objects.filter(user=user_id)
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
         grouped_bookmarks = group_bookmarks(serialized_bookmarks)
 
