@@ -14,7 +14,10 @@ class BookmarkBulkCreateAPIView(APIView):
     shortcut_serializer_class = ShortcutSerializer
 
     def post(self, request, *args, **kwargs):
-        bookmarks = request.data
+        user_id = request.user.id
+        bookmarks = [
+            {**bookmark, "user": user_id} for bookmark in request.data
+        ]
         serializer = self.bookmark_serializer_class(data=bookmarks, many=True)
         if not serializer.is_valid():
             error = get_serializer_error(serializer.errors)
@@ -22,7 +25,6 @@ class BookmarkBulkCreateAPIView(APIView):
 
         serializer.save()
 
-        user_id = request.user.id
         all_bookmarks = Bookmark.objects.filter(user=user_id)
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
         grouped_bookmarks = group_bookmarks(serialized_bookmarks)
