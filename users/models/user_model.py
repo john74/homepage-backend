@@ -61,10 +61,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=150,
         unique=True
     )
-    image = models.ImageField(
+    image = models.URLField(
+        max_length=1000,
         null=True,
         blank=True,
-        upload_to=""
+        verbose_name="Profile image URL",
+        help_text=""
     )
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
