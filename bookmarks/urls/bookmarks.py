@@ -12,5 +12,5 @@ urlpatterns = [
     path("bulk-create/", views.BookmarkBulkCreateAPIView.as_view(), name="bulk_create"),
     path("bulk-delete/", views.BookmarkBulkDeleteAPIView.as_view(), name="bulk_delete"),
     path("bulk-update/", views.BookmarkBulkUpdateAPIView.as_view(), name="bulk_update"),
-    re_path(r"^(?i)(?P<bookmark_id>[\w\d-]+)/$", views.BookmarkDetailAPIView.as_view(), name="detail"),
+    re_path(r"^(?P<bookmark_id>[a-zA-Z0-9-]+)/$", views.BookmarkDetailAPIView.as_view(), name="detail"),
 ]
