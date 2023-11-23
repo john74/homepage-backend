@@ -11,3 +11,4 @@ from .bookmark_bulk_update_view import BookmarkBulkUpdateAPIView
 from .shortcut_list_view import ShortcutListAPIView
 from .shortcut_bulk_delete_view import ShortcutBulkDeleteAPIView
 from .bookmark_sub_category_list_view import BookmarkSubCategoryListAPIView
+from .bookmark_sub_category_bulk_create_view import BookmarkSubCategoryBulkCreateAPIView
