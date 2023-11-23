@@ -19,5 +19,6 @@ class SettingSerializer(serializers.ModelSerializer):
             'forecast_type',
             'open_weather_api_key',
             'timezone',
-            'user'
+            'user',
+            'show_bookmark_sub_categories',
         ]
