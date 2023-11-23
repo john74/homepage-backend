@@ -12,9 +12,12 @@ from bookmarks.serializers import (
 from bookmarks.utils import (
     group_bookmarks, group_bookmark_categories,
 )
+from frontend.utils import retrieve_weather_data
 from search_engines.models import SearchEngine
 from search_engines.serializers import SearchEngineSerializer
-from frontend.utils import retrieve_weather_data
+from users.models import User
+from users.serializers import UserSerializer
+
 
 
 class HomeListAPIView(APIView):
@@ -22,9 +25,13 @@ class HomeListAPIView(APIView):
     bookmark_category_serializer_class = BookmarkCategorySerializer
     shortcut_serializer_class = ShortcutSerializer
     search_engine_serializer_class = SearchEngineSerializer
+    user_serializer_class = UserSerializer
 
     def get(self, request, *args, **kwargs):
-        user_id = request.user.id
+        user = User.objects.filter(id=request.user.id).first()
+        serialized_user = self.user_serializer_class(user).data
+
+        user_id = user.id
         weather_data = retrieve_weather_data(user_id=user_id)
 
         all_bookmarks = Bookmark.objects.filter(user=user_id)
@@ -46,10 +53,11 @@ class HomeListAPIView(APIView):
         serialized_non_default_engines = self.search_engine_serializer_class(non_default_engines, many=True).data
 
         response_data = {
-            'bookmarks': grouped_bookmarks,
-            'categories': grouped_categories,
-            'shortcuts': serialized_shortcuts,
-            'search_engines': {
+            "user": serialized_user,
+            "bookmarks": grouped_bookmarks,
+            "categories": grouped_categories,
+            "shortcuts": serialized_shortcuts,
+            "search_engines": {
                 "default": serialized_default_engine,
                 "nonDefault": serialized_non_default_engines,
             },
