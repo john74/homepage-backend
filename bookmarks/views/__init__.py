@@ -10,3 +10,4 @@ from .bookmark_bulk_delete_view import BookmarkBulkDeleteAPIView
 from .bookmark_bulk_update_view import BookmarkBulkUpdateAPIView
 from .shortcut_list_view import ShortcutListAPIView
 from .shortcut_bulk_delete_view import ShortcutBulkDeleteAPIView
+from .bookmark_sub_category_list_view import BookmarkSubCategoryListAPIView
