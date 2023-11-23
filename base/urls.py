@@ -8,8 +8,9 @@ urlpatterns = [
 
 # bookmarks app
 urlpatterns += [
-    path('api/bookmarks/', include('bookmarks.urls.bookmarks', namespace='bookmarks')),
     path('api/categories/', include('bookmarks.urls.categories', namespace='categories')),
+    path('api/sub-categories/', include('bookmarks.urls.sub_categories', namespace='sub_categories')),
+    path('api/bookmarks/', include('bookmarks.urls.bookmarks', namespace='bookmarks')),
     path('api/shortcuts/', include('bookmarks.urls.shortcuts', namespace='shortcuts')),
 ]
 
