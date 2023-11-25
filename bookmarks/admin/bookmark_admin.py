@@ -10,5 +10,5 @@ class BookmarkAdmin(admin.ModelAdmin):
         'id', 'user',
     ]
     list_display = [
-        'id', 'name', 'category', 'is_shortcut'
+        'id', 'name', 'category', 'sub_category', 'is_shortcut',
     ]
