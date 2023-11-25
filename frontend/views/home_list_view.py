@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bookmarks.models import (
-    Bookmark, BookmarkCategory,
+    Bookmark, BookmarkCategory, BookmarkSubCategory
 )
 from bookmarks.serializers import (
     BookmarkSerializer, BookmarkCategorySerializer,
-    ShortcutSerializer,
+    ShortcutSerializer, BookmarkSubCategorySerializer
 )
 from bookmarks.utils import (
     group_bookmarks, group_bookmark_categories,
@@ -25,6 +25,7 @@ from users.serializers import UserSerializer
 class HomeListAPIView(APIView):
     bookmark_serializer_class = BookmarkSerializer
     bookmark_category_serializer_class = BookmarkCategorySerializer
+    bookmark_sub_category_serializer_class = BookmarkSubCategorySerializer
     shortcut_serializer_class = ShortcutSerializer
     search_engine_serializer_class = SearchEngineSerializer
     user_serializer_class = UserSerializer
@@ -48,6 +49,10 @@ class HomeListAPIView(APIView):
         serialized_categories = self.bookmark_category_serializer_class(all_bookmark_categories, many=True).data
         grouped_categories = group_bookmark_categories(user_id, serialized_categories)
 
+        all_bookmark_sub_categories = BookmarkSubCategory.objects.filter(user=user_id)
+        serialized_sub_categories = self.bookmark_sub_category_serializer_class(all_bookmark_sub_categories, many=True).data
+        grouped_sub_categories = group_bookmarks(serialized_sub_categories)
+
         all_shortcuts = all_bookmarks.filter(is_shortcut=True)
         serialized_shortcuts = self.shortcut_serializer_class(all_shortcuts, many=True).data
 
@@ -66,6 +71,7 @@ class HomeListAPIView(APIView):
             "settings": serialized_settings,
             "bookmarks": grouped_bookmarks,
             "categories": grouped_categories,
+            "sub_categories": grouped_sub_categories,
             "shortcuts": serialized_shortcuts,
             "search_engines": {
                 "default": serialized_default_engine,
