@@ -1,6 +1,6 @@
-from django.utils import timezone
-
+from django.conf import settings
 from django.contrib.auth import authenticate
+from django.utils import timezone
 
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -30,10 +30,14 @@ class SignInAPIView(APIView):
         response.set_cookie(key='refreshToken', value=str(refresh_token), httponly=True)
         response.set_cookie(key='accessToken', value=str(refresh_token.access_token), httponly=True)
 
+        access_token_lifetime = settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
+        refresh_token_lifetime = settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
         response.data = {
             "username": user.username,
             "email": user.email,
             "last_login": user.last_login,
+            "access_token_lifetime": access_token_lifetime,
+            "refresh_token_lifetime": refresh_token_lifetime
         }
         response.status = status.HTTP_200_OK
 
