@@ -37,7 +37,7 @@ SEARCH_ENGINES_DATA = [
     },
     {
         'name': 'Whoogle',
-        'url': 'https://search.garudalinux.org/search',
+        'url': 'https://search.notrustverify.ch/search',
         'method': 'POST',
         'name_attribute': 'q',
     },
