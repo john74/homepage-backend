@@ -6,6 +6,12 @@ from users.models import User
 class UserSerializer(serializers.ModelSerializer):
     all_users = User.objects.all();
 
+    initial_letter = serializers.SerializerMethodField()
+
+    def get_initial_letter(self, user):
+        initial_letter = user.username[0] if user.username else user.email[0]
+        return initial_letter.capitalize()
+
     password = serializers.CharField(
         min_length=8,
         write_only=True,
@@ -29,7 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "username",
             "password",
-            "image"
+            "image",
+            "initial_letter",
         ]
 
     def create(self, validated_data):
