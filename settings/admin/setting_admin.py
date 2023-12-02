@@ -17,6 +17,11 @@ class SettingAdmin(admin.ModelAdmin):
         'system_of_measurement', 'timezone',
     ]
 
+    def save_model(self, request, setting, form, change):
+        # Assign the currently logged-in user to the setting's user field
+        setting.user = request.user
+        super().save_model(request, setting, form, change)
+
     def has_add_permission(self, request):
         # Disallow adding a new instance if a setting already exists.
         return not Setting.objects.exists()

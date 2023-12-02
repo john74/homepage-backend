@@ -13,7 +13,7 @@ class BookmarkAdmin(admin.ModelAdmin):
         'id', 'name', 'category', 'sub_category', 'is_shortcut',
     ]
 
-    def save_model(self, request, bookmark):
-        # Assign the currently logged-in user to the bookmark's user_id field
+    def save_model(self, request, bookmark, form, change):
+        # Assign the currently logged-in user to the bookmark's user field
         bookmark.user = request.user
         super().save_model(request, bookmark, form, change)
