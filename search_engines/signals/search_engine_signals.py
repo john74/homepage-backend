@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
 from search_engines.constants import SEARCH_ENGINES_DATA
@@ -12,17 +12,17 @@ def add_predefined_search_engines(sender, **kwargs):
     Populates the Search Engines table with all available engines in
     SEARCH_ENGINES_DATA list, setting Google as the default.
     """
-    user_id = kwargs.get("user", None) or kwargs["instance"].id
-    if SearchEngine.objects.filter(user=user_id):
+    user = kwargs.get("user", None) or kwargs["instance"]
+    if SearchEngine.objects.filter(user=user):
         return
 
     for engine_data in SEARCH_ENGINES_DATA:
-        engine_data['user'] = user_id
+        engine_data['user'] = user
         if engine_data['name'].lower() == 'google':
             engine_data['is_default'] = True
         SearchEngine.objects.create(**engine_data)
 
-@receiver([post_save, post_delete], sender=SearchEngine)
+@receiver([post_save, pre_delete], sender=SearchEngine)
 def set_default_search_engine(sender, **kwargs):
     """
     Ensures the presence of at least one search engine and enforces a single default engine.
