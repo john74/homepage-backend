@@ -13,7 +13,7 @@ class UserManager(BaseUserManager):
     Custom Manager class for the custom User model
     """
 
-    def create_user(self, email, password, username=None):
+    def create_user(self, email, password):
         """
         Create and return a User with an email and password.
         """
@@ -25,7 +25,6 @@ class UserManager(BaseUserManager):
 
         email = self.normalize_email(email)
         user = self.model(email=email)
-        user = self.model(username=username) if username else ''
         user.set_password(password)
         user.save(using=self._db)
 
