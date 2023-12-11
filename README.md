@@ -24,7 +24,7 @@ Follow these steps to set up and run the project locally:
 
 1. **Clone the repository:**
    ```bash
-   git clone git@github.com:john74/thikee-backend.git && (cd thikee-backend || exit)
+   git clone git@github.com:john74/thikee-backend.git ; cd thikee-backend
 
 2. **Install dependencies:**
    ```bash
