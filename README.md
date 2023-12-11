@@ -22,25 +22,29 @@ Thikee allows users to:
 
 Follow these steps to set up and run the project locally:
 
-1. **Install dependencies:**
+1. **Clone the repository:**
+   ```bash
+   git clone git@github.com:john74/thikee-backend.git && (cd thikee-backend || exit)
+
+2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
 
-2. **Rename environment file:**
+3. **Rename environment file:**
    ```bash
    mv .env.example .env
 - Generate new keys using openssl rand -base64 32.
 - Replace the existing values of the environment variables in the .env file or use the predefined values.
 
-3. **Run migrations:**
+4. **Run migrations:**
    ```bash
    python manage.py migrate
 
-4. **Create a superuser:**
+5. **Create a superuser:**
    ```bash
    python manage.py createsuperuser
 
-5. **Run the server:**
+6. **Run the server:**
    ```bash
    python manage.py runserver
 
