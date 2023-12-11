@@ -27,10 +27,10 @@ Follow these steps to set up and run the project locally:
    pip install -r requirements.txt
 
 2. **Rename environment file:**
-   - Generate new keys using openssl rand -base64 32.
-   - Replace the existing values of the environment variables in the .env file.
    ```bash
    mv .env.example .env
+- Generate new keys using openssl rand -base64 32.
+- Replace the existing values of the environment variables in the .env file or use the predefined values.
 
 3. **Run migrations:**
    ```bash
@@ -40,9 +40,7 @@ Follow these steps to set up and run the project locally:
    ```bash
    python manage.py createsuperuser
 
-5. **Populate environment variables:**
-
-6. **Run the server:**
+5. **Run the server:**
    ```bash
    python manage.py runserver
 
