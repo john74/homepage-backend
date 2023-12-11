@@ -34,7 +34,17 @@ Follow these steps to set up and run the project locally:
    ```bash
    python manage.py createsuperuser
 
-4. **Run the server:**
+4. **Rename environment file:**
+   ```bash
+   mv .env.example .env
+
+5. **Generate keys for environment variables:**
+   ```bash
+   openssl rand -base64 32
+
+6. **Populate environment variables:**
+
+7. **Run the server:**
    ```bash
    python manage.py runserver
 
