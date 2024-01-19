@@ -10,7 +10,7 @@ class RefreshTokenAPIView(TokenRefreshView):
     def post(self, request):
         response = super().post(request)
         response_data = {
-            "accessToken": response.data["access"],
-            "access_token_lifetime": settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+            "thikee_access_token": response.data["access"],
+            "thikee_access_token_lifetime": settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
         }
         return Response(data=response_data, status=status.HTTP_200_OK)
