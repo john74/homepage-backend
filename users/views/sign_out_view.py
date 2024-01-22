@@ -5,10 +5,13 @@ from rest_framework.response import Response
 
 class SignOutAPIView(APIView):
     """
-    Logs out the currently authenticated user by deleting the 'refreshToken'
-    from the response's HTTP cookies.
+    Signs out the currently authenticated user by setting refresh and access tokens with empty values
+    and an expiration date of the current datetime minus 100 seconds. This action prompts the browser
+    to consider them as expired cookies, leading to their deletion.
     """
     def post(self, request):
         response = Response()
-        response.delete_cookie(key='refreshToken')
-        return Response({'message': 'Successfully signed out'}, status=status.HTTP_200_OK)
+        response.set_cookie(key='thikeeRefreshToken', value="", httponly=True, expires=-100)
+        response.set_cookie(key='thikeeAccessToken', value="", httponly=True, expires=-100)
+        response.status = status.HTTP_200_OK
+        return response
