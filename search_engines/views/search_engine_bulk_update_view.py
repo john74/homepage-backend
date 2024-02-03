@@ -46,7 +46,7 @@ class SearchEngineBulkUpdateAPIView(APIView):
         response_data = {
             "message": "Search engine updated successfully.",
             "default": serialized_default_engine,
-            "nonDefault": serialized_non_default_engines,
+            "non_default": serialized_non_default_engines,
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)

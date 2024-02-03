@@ -75,7 +75,7 @@ class HomeListAPIView(APIView):
             "shortcuts": serialized_shortcuts,
             "search_engines": {
                 "default": serialized_default_engine,
-                "nonDefault": serialized_non_default_engines,
+                "non_default": serialized_non_default_engines,
             },
             "weather": weather_data,
         }
