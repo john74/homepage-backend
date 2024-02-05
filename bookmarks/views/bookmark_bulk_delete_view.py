@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer, ShortcutSerializer
-from bookmarks.utils import group_bookmarks
+from bookmarks.utils import group_by_category
 
 
 class BookmarkBulkDeleteAPIView(APIView):
@@ -37,7 +37,7 @@ class BookmarkBulkDeleteAPIView(APIView):
         # Exclude the deleted bookmarks from the original queryset
         all_bookmarks = all_bookmarks.exclude(id__in=bookmarks_to_delete.values('id'))
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
-        grouped_bookmarks = group_bookmarks(serialized_bookmarks)
+        grouped_bookmarks = group_by_category(serialized_bookmarks)
 
         shortcuts = all_bookmarks.filter(is_shortcut=True)
         serialized_shortcuts = self.shortcut_serializer_class(shortcuts, many=True).data

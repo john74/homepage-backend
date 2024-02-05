@@ -10,7 +10,7 @@ from bookmarks.serializers import (
     ShortcutSerializer, BookmarkSubCategorySerializer
 )
 from bookmarks.utils import (
-    group_bookmarks, group_bookmark_categories,
+    group_by_category, group_bookmark_categories,
 )
 from frontend.utils import retrieve_weather_data
 from search_engines.models import SearchEngine
@@ -43,7 +43,7 @@ class HomeListAPIView(APIView):
 
         all_bookmarks = Bookmark.objects.filter(user=user_id)
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
-        grouped_bookmarks = group_bookmarks(serialized_bookmarks)
+        grouped_bookmarks = group_by_category(serialized_bookmarks)
 
         all_bookmark_categories = BookmarkCategory.objects.filter(user=user_id)
         serialized_categories = self.bookmark_category_serializer_class(all_bookmark_categories, many=True).data
@@ -51,7 +51,7 @@ class HomeListAPIView(APIView):
 
         all_bookmark_sub_categories = BookmarkSubCategory.objects.filter(user=user_id)
         serialized_sub_categories = self.bookmark_sub_category_serializer_class(all_bookmark_sub_categories, many=True).data
-        grouped_sub_categories = group_bookmarks(serialized_sub_categories)
+        grouped_sub_categories = group_by_category(serialized_sub_categories)
 
         all_shortcuts = all_bookmarks.filter(is_shortcut=True)
         serialized_shortcuts = self.shortcut_serializer_class(all_shortcuts, many=True).data

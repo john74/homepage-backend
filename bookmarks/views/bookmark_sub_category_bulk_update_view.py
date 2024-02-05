@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from base.utils import get_serializer_error
 from bookmarks.models import BookmarkSubCategory
 from bookmarks.serializers import BookmarkSubCategorySerializer
-from bookmarks.utils import group_bookmarks
+from bookmarks.utils import group_by_category
 
 
 class BookmarkSubCategoryBulkUpdateAPIView(APIView):
@@ -31,7 +31,7 @@ class BookmarkSubCategoryBulkUpdateAPIView(APIView):
 
         all_sub_categories = BookmarkSubCategory.objects.filter(user=user_id)
         serialized_sub_categories = self.bookmark_sub_category_serializer_class(all_sub_categories, many=True).data
-        grouped_sub_categories = group_bookmarks(serialized_sub_categories)
+        grouped_sub_categories = group_by_category(serialized_sub_categories)
 
         response_data = {
             "message": "Subcategories updated successfully.",

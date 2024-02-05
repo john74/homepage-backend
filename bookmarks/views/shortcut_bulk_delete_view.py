@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer, ShortcutSerializer
-from bookmarks.utils import group_bookmarks
+from bookmarks.utils import group_by_category
 
 
 class ShortcutBulkDeleteAPIView(APIView):
@@ -44,7 +44,7 @@ class ShortcutBulkDeleteAPIView(APIView):
         # It eliminates the need for an additional database query to retrieve all bookmarks.
         all_bookmarks = shortcuts_to_delete.union(all_bookmarks).order_by("created_at")
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
-        grouped_bookmarks = group_bookmarks(serialized_bookmarks)
+        grouped_bookmarks = group_by_category(serialized_bookmarks)
 
         response_data = {
             "message": "Shortcut deleted successfully.",

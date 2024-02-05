@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-def group_bookmarks(serialized_bookmarks):
+def group_by_category(serialized_bookmarks):
     unique_category_ids = set([str(bookmark["category"]) for bookmark in serialized_bookmarks])
     grouped_bookmarks = {category_id: [] for category_id in unique_category_ids}
 

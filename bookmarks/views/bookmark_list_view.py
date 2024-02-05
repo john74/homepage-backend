@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer
-from bookmarks.utils import group_bookmarks
+from bookmarks.utils import group_by_category
 
 
 class BookmarkListAPIView(APIView):
@@ -15,6 +15,6 @@ class BookmarkListAPIView(APIView):
         bookmarks = Bookmark.objects.filter(user=user_id)
         serialized_bookmarks = self.bookmark_serializer_class(bookmarks, many=True).data
 
-        grouped_bookmarks = group_bookmarks(serialized_bookmarks)
+        grouped_bookmarks = group_by_category(serialized_bookmarks)
         response_data = {'bookmarks': grouped_bookmarks}
         return Response(data=response_data, status=status.HTTP_200_OK)

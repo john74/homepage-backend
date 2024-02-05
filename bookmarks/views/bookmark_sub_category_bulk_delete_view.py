@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from bookmarks.models import BookmarkSubCategory
 from bookmarks.serializers import BookmarkSubCategorySerializer
-from bookmarks.utils import group_bookmarks
+from bookmarks.utils import group_by_category
 
 
 class BookmarkSubCategoryBulkDeleteAPIView(APIView):
@@ -34,7 +34,7 @@ class BookmarkSubCategoryBulkDeleteAPIView(APIView):
         # Exclude the deleted bookmarks from the original queryset
         all_sub_categories = all_sub_categories.exclude(id__in=sub_categories_to_delete.values('id'))
         serialized_sub_categories = self.sub_category_serializer_class(all_sub_categories, many=True).data
-        grouped_sub_categories = group_bookmarks(serialized_sub_categories)
+        grouped_sub_categories = group_by_category(serialized_sub_categories)
 
         response_data = {
             "message": "Subcategories deleted successfully.",

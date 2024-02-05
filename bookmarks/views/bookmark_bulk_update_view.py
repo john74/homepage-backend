@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from base.utils import get_serializer_error
 from bookmarks.models import Bookmark
 from bookmarks.serializers import BookmarkSerializer, ShortcutSerializer
-from bookmarks.utils import group_bookmarks
+from bookmarks.utils import group_by_category
 
 
 class BookmarkBulkUpdateAPIView(APIView):
@@ -32,7 +32,7 @@ class BookmarkBulkUpdateAPIView(APIView):
 
         all_bookmarks = Bookmark.objects.filter(user=user_id)
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
-        grouped_bookmarks = group_bookmarks(serialized_bookmarks)
+        grouped_bookmarks = group_by_category(serialized_bookmarks)
 
         shortcuts = all_bookmarks.filter(is_shortcut=True)
         serialized_shortcuts = self.shortcut_serializer_class(shortcuts, many=True).data
