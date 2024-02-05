@@ -8,6 +8,7 @@ from settings.models import Setting
 class BookmarkSerializer(serializers.ModelSerializer):
     url = serializers.CharField(validators=[URLValidator()])
     icon_url = serializers.CharField(validators=[URLValidator()])
+
     class Meta:
         model = Bookmark
         fields = [
@@ -23,18 +24,9 @@ class BookmarkSerializer(serializers.ModelSerializer):
             'user',
         ]
 
-    def to_representation(self, instance):
-        # Create a custom representation for the serialized data
-        bookmark = super().to_representation(instance)
-        settings = Setting.objects.get(user=instance.user.id)
-        show_sub_categories = settings.show_bookmark_sub_categories
-        grouping_factor = "sub_category" if show_sub_categories else "category"
-        bookmark_category = bookmark.get(grouping_factor)
-        return {str(bookmark_category): bookmark}
-
     def save(self, validated_data):
-        bookmark = super().save(**validated_data)
-        return self.to_representation(bookmark)
+        # return the new bookmark
+        return super().save(**validated_data)
 
     def update(self, instance, validated_data):
         instance.category = validated_data.get('category', instance.category)
@@ -44,4 +36,4 @@ class BookmarkSerializer(serializers.ModelSerializer):
         instance.icon_url = validated_data.get('icon_url', instance.icon_url)
         instance.is_shortcut = validated_data.get('is_shortcut', instance.is_shortcut)
         instance.save()
-        return self.to_representation(instance)
+        return instance
