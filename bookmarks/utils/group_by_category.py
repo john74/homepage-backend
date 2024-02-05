@@ -1,12 +1,9 @@
-from collections import defaultdict
+def group_by_category(serialized_data):
+    unique_category_ids = set([str(item["category"]) for item in serialized_data])
+    grouped_data = {category_id: [] for category_id in unique_category_ids}
 
+    for item in serialized_data:
+        category_id = str(item["category"])
+        grouped_data[category_id].append(item)
 
-def group_by_category(serialized_bookmarks):
-    unique_category_ids = set([str(bookmark["category"]) for bookmark in serialized_bookmarks])
-    grouped_bookmarks = {category_id: [] for category_id in unique_category_ids}
-
-    for bookmark in serialized_bookmarks:
-        category_id = str(bookmark["category"])
-        grouped_bookmarks[category_id].append(bookmark)
-
-    return grouped_bookmarks
+    return grouped_data
