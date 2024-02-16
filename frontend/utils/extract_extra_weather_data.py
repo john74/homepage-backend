@@ -8,18 +8,12 @@ def extract_extra_weather_data(data):
     sunrise_timestamp = city_data["sunrise"]
     sunset_timestamp = city_data["sunset"]
 
-    return {
-        "feels_like_temperature": current_data["main"]["feels_like"],
-        "minimum_temperature": current_data["main"]["temp_min"],
-        "maximum_temperature": current_data["main"]["temp_max"],
-        "humidity_percentage": current_data["main"]["humidity"],
-        "wind_speed": current_data["wind"]["speed"],
-        "sunrise_time": {
-            "hour": datetime.datetime.utcfromtimestamp(sunrise_timestamp).strftime('%H'),
-            "minutes": datetime.datetime.utcfromtimestamp(sunrise_timestamp).strftime('%M')
-        },
-        "sunset_time": {
-            "hour": datetime.datetime.utcfromtimestamp(sunset_timestamp).strftime('%H'),
-            "minutes": datetime.datetime.utcfromtimestamp(sunset_timestamp).strftime('%M')
-        }
-    }
+    return [
+        {"label": "feels_like", "value": current_data["main"]["feels_like"]},
+        {"label": "min_temp", "value": current_data["main"]["temp_min"]},
+        {"label": "max_temp", "value": current_data["main"]["temp_max"]},
+        {"label": "humidity", "value": current_data["main"]["humidity"]},
+        {"label": "wind", "value": current_data["wind"]["speed"]},
+        {"label": "sunrise", "value": f"{datetime.datetime.utcfromtimestamp(sunrise_timestamp).strftime('%H')}:{datetime.datetime.utcfromtimestamp(sunrise_timestamp).strftime('%M')}"},
+        {"label": "sunset", "value": f"{datetime.datetime.utcfromtimestamp(sunset_timestamp).strftime('%H')}:{datetime.datetime.utcfromtimestamp(sunset_timestamp).strftime('%M')}"},
+    ]
