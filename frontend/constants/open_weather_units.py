@@ -1,27 +1,24 @@
 # https://openweathermap.org/weather-data
 OPEN_WEATHER_UNITS = {
     "standard": {
-        "temperature_symbol": "K",
-        "temperature_unit": "Kelvin",
-        "speed": "m/s",
+        "temperature": "K",
+        "wind": "m/s",
         "humidity": "%",
         "pressure": "hPa",
         "visibility": "m",
     },
 
     "metric": {
-        "temperature_symbol": "°C",
-        "temperature_unit": "Celsius",
-        "speed": "m/s",
+        "temperature": "°C",
+        "wind": "m/s",
         "humidity": "%",
         "pressure": "hPa",
         "visibility": "m",
     },
 
     "imperial": {
-        "temperature_symbol": "°F",
-        "temperature_unit": "Fahrenheit",
-        "speed": "mph",
+        "temperature": "°F",
+        "wind": "mph",
         "humidity": "%",
         "pressure": "hPa",
         "visibility": "m",
