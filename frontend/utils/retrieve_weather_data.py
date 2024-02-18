@@ -32,7 +32,7 @@ def retrieve_weather_data(setting=None, user_id=None):
     weather_data =  response.json()
     forecast_type = setting.forecast_type
     current_weather_data = extract_current_weather_data(weather_data)
-    extra_info = extract_extra_weather_data(weather_data)
+    extra_info = extract_extra_weather_data(weather_data, setting)
     hourly_forecasts = extract_hourly_forecasts(weather_data)
     weekly_forecasts = extract_weekly_forecasts(weather_data)
     daily_forecasts = group_forecasts_by_day(weekly_forecasts)
