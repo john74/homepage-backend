@@ -6,6 +6,7 @@ def extract_current_weather_data(data):
     city_data = data["city"]
 
     date = datetime.datetime.utcfromtimestamp(current_data["dt"])
+
     return {
         "week_day": date.strftime('%A'),
         "month_day": date.strftime('%d'),
@@ -14,6 +15,7 @@ def extract_current_weather_data(data):
         "hours": date.strftime('%H'),
         "minutes": date.strftime('%M'),
         "city_name": city_data["name"],
+        "city_id": city_data["id"],
         "country_code": city_data["country"],
         "lat": city_data["coord"]["lat"],
         "lon": city_data["coord"]["lon"],
