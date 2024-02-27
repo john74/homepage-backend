@@ -1,2 +1,3 @@
 from .home_list_view import HomeListAPIView
 from .weather_view import WeatherAPIView
+from .user_settings_view import UserSettingsListAPIView
