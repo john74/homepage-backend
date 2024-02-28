@@ -14,7 +14,7 @@ class ShortcutBulkDeleteAPIView(APIView):
     shortcut_serializer_class = ShortcutSerializer
 
     def delete(self, request, *args, **kwargs):
-        shortcut_ids = request.data.get('ids', [])
+        shortcut_ids = request.data
 
         if not shortcut_ids:
             return Response(data={"error": "No shortcut found"}, status=status.HTTP_400_BAD_REQUEST)
@@ -22,6 +22,7 @@ class ShortcutBulkDeleteAPIView(APIView):
         user_id = request.user.id
         # Fetch all bookmarks
         all_bookmarks = Bookmark.objects.filter(user=user_id)
+
         # Filter shortcuts to be soft deleted
         try:
             shortcuts_to_delete = all_bookmarks.filter(id__in=shortcut_ids)
@@ -44,12 +45,10 @@ class ShortcutBulkDeleteAPIView(APIView):
         # It eliminates the need for an additional database query to retrieve all bookmarks.
         all_bookmarks = shortcuts_to_delete.union(all_bookmarks).order_by("created_at")
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
-        grouped_bookmarks = group_by_category(serialized_bookmarks)
 
         response_data = {
             "message": "Shortcut deleted successfully.",
-            "bookmarks": grouped_bookmarks,
-            "shortcuts": serialized_shortcuts
+            "bookmarks": serialized_bookmarks,
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)
