@@ -47,7 +47,6 @@ class ShortcutBulkDeleteAPIView(APIView):
         serialized_bookmarks = self.bookmark_serializer_class(all_bookmarks, many=True).data
 
         response_data = {
-            "message": "Shortcut deleted successfully.",
             "bookmarks": serialized_bookmarks,
         }
 
