@@ -3,10 +3,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bookmarks.models import (
-    Bookmark,
+    Bookmark, BookmarkCategory,
 )
 from bookmarks.serializers import (
-    BookmarkSerializer,
+    BookmarkSerializer, BookmarkCategorySerializer,
 )
 from users.models import User
 from users.serializers import UserSerializer
@@ -26,9 +26,13 @@ class UserSettingsListAPIView(APIView):
         all_bookmarks = Bookmark.objects.filter(user=user_id)
         serialized_bookmarks = BookmarkSerializer(all_bookmarks, many=True).data
 
+        all_bookmark_categories = BookmarkCategory.objects.filter(user=user_id)
+        serialized_categories = BookmarkCategorySerializer(all_bookmark_categories, many=True).data
+
         response_data = {
             "user": serialized_user,
-            "bookmarks": serialized_bookmarks
+            "bookmarks": serialized_bookmarks,
+            "categories": serialized_categories
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)
