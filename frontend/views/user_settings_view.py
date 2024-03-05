@@ -35,9 +35,9 @@ class UserSettingsListAPIView(APIView):
 
         response_data = {
             "user": serialized_user,
-            "bookmarks": serialized_bookmarks,
             "bookmark_categories": serialized_categories,
             "bookmark_sub_categories": serialized_sub_categories,
+            "bookmarks": serialized_bookmarks,
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)
