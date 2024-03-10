@@ -9,10 +9,9 @@ from search_engines.serializers import SearchEngineSerializer
 
 
 class SearchEngineBulkDeleteAPIView(APIView):
-    search_engine_serializer_class = SearchEngineSerializer
 
     def delete(self, request, *args, **kwargs):
-        search_engine_ids = request.data.get('ids', [])
+        search_engine_ids = request.data
 
         if not search_engine_ids:
             return Response(data={"error": "No search engine found"}, status=status.HTTP_400_BAD_REQUEST)
@@ -31,16 +30,10 @@ class SearchEngineBulkDeleteAPIView(APIView):
         search_engines_to_delete.delete()
 
         all_search_engines = all_search_engines.exclude(id__in=search_engines_to_delete.values('id'))
-        default_engine = all_search_engines.get(is_default=True)
-        non_default_engines = all_search_engines.filter(is_default=False)
-
-        serialized_default_engine = self.search_engine_serializer_class(default_engine).data
-        serialized_non_default_engines = self.search_engine_serializer_class(non_default_engines, many=True).data
+        serialized_search_engines = SearchEngineSerializer(all_search_engines, many=True).data
 
         response_data = {
-            "message": "Search engine deleted successfully.",
-            "default": serialized_default_engine,
-            "nonDefault": serialized_non_default_engines,
+            "search_engines": serialized_search_engines,
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)

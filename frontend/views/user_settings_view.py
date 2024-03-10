@@ -9,6 +9,8 @@ from bookmarks.serializers import (
     BookmarkSerializer, BookmarkCategorySerializer,
     BookmarkSubCategorySerializer,
 )
+from search_engines.models import SearchEngine
+from search_engines.serializers import SearchEngineSerializer
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -33,11 +35,15 @@ class UserSettingsListAPIView(APIView):
         all_bookmark_sub_categories = BookmarkSubCategory.objects.filter(user=user_id)
         serialized_sub_categories = BookmarkSubCategorySerializer(all_bookmark_sub_categories, many=True).data
 
+        all_search_engines = SearchEngine.objects.filter(user=user_id)
+        serialized_search_engines = SearchEngineSerializer(all_search_engines, many=True).data
+
         response_data = {
             "user": serialized_user,
             "bookmark_categories": serialized_categories,
             "bookmark_sub_categories": serialized_sub_categories,
             "bookmarks": serialized_bookmarks,
+            "search_engines": serialized_search_engines,
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)

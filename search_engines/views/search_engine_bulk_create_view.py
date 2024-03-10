@@ -8,7 +8,6 @@ from search_engines.serializers import SearchEngineSerializer
 
 
 class SearchEngineBulkCreateAPIView(APIView):
-    search_engine_serializer_class = SearchEngineSerializer
 
     def post(self, request, *args, **kwargs):
         user_id = request.user.id
@@ -16,7 +15,7 @@ class SearchEngineBulkCreateAPIView(APIView):
             {**engine, "user": user_id} for engine in request.data
         ]
 
-        serializer = self.search_engine_serializer_class(data=search_engines, many=True, partial=True)
+        serializer = SearchEngineSerializer(data=search_engines, many=True, partial=True)
         if not serializer.is_valid():
             error = get_serializer_error(serializer.errors)
             return Response(data={"error": error}, status=status.HTTP_400_BAD_REQUEST)
@@ -33,16 +32,10 @@ class SearchEngineBulkCreateAPIView(APIView):
             rest_default_engines.update(is_default=False)
 
         all_search_engines = SearchEngine.objects.filter(user=user_id)
-        default_engine = all_search_engines.get(is_default=True)
-        non_default_engines = all_search_engines.filter(is_default=False)
-
-        serialized_default_engine = self.search_engine_serializer_class(default_engine).data
-        serialized_non_default_engines = self.search_engine_serializer_class(non_default_engines, many=True).data
+        serialized_search_engines = SearchEngineSerializer(all_search_engines, many=True).data
 
         response_data = {
-            "message": "Search engine created successfully.",
-            "default": serialized_default_engine,
-            "nonDefault": serialized_non_default_engines,
+            "search_engines": serialized_search_engines,
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)
