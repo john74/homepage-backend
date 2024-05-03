@@ -11,6 +11,8 @@ from bookmarks.serializers import (
 )
 from search_engines.models import SearchEngine
 from search_engines.serializers import SearchEngineSerializer
+from settings.models import Setting
+from settings.serializers import SettingSerializer
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -38,12 +40,16 @@ class UserSettingsListAPIView(APIView):
         all_search_engines = SearchEngine.objects.filter(user=user_id)
         serialized_search_engines = SearchEngineSerializer(all_search_engines, many=True).data
 
+        settings = Setting.objects.get(user=user_id)
+        serialized_settings = SettingSerializer(settings).data
+
         response_data = {
             "user": serialized_user,
             "bookmark_categories": serialized_categories,
             "bookmark_sub_categories": serialized_sub_categories,
             "bookmarks": serialized_bookmarks,
             "search_engines": serialized_search_engines,
+            "settings": serialized_settings,
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)
